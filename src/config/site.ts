@@ -42,7 +42,22 @@ export const site = {
   description:
     'Build a daily Christian routine: Bible reading, prayer and reflection, at hours you choose. No feed, no streak-shaming, no ads, no tracking.',
 
-  url: 'https://useholyfit.com',
+  /*
+   * The canonical origin, and it must be the one the domain actually serves.
+   *
+   * This was the apex, which is not where the site lives: Vercel answers
+   * `https://useholyfit.com` with a 308 to `https://www.useholyfit.com/`. That
+   * made every URL derived from this constant a redirect — the sitemap listed
+   * four of them, robots.txt pointed at a fifth, and `metadataBase` resolved
+   * og:url and the OG image against a host that bounces. Google follows the
+   * redirect and then reports the pages as "Page with redirect" rather than
+   * indexing what the sitemap claimed, which is a self-inflicted diagnostic on
+   * a four-page site.
+   *
+   * If the redirect is ever flipped to point at the apex instead, this is the
+   * line that has to change with it.
+   */
+  url: 'https://www.useholyfit.com',
 
   /**
    * The name the service is published under.

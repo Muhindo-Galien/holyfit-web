@@ -31,6 +31,19 @@ export const metadata: Metadata = {
   description: site.description,
   applicationName: site.name,
   /*
+   * Self-canonical, per route.
+   *
+   * `'./'` and not `'/'`: a literal `/` in a root layout points every page at
+   * the homepage, which would tell Google the privacy policy and the terms are
+   * the same document as the landing page. The relative form resolves against
+   * `metadataBase` per route segment, so each page canonicalises to itself.
+   *
+   * Worth having because the site answers on two origins — the apex 308s to
+   * `www` — and a canonical URL is what settles which one is the real address
+   * if anything ever links to the wrong one.
+   */
+  alternates: { canonical: './' },
+  /*
    * Ordered by intent, not by volume: the terms someone types when they are
    * trying to *build* something come first, and the content terms they type
    * when they already know what they want come after.
