@@ -14,6 +14,36 @@ const nextConfig: NextConfig = {
    */
   turbopack: { root: path.resolve(process.cwd()) },
 
+  /*
+   * Keep the deployment's own hostname out of the index.
+   *
+   * Vercel serves every project on `<project>.vercel.app` as well as on its
+   * custom domain, and that hostname answers 200 with the entire site. Google
+   * found it and indexed it: a search for the brand returned
+   * `holyfit-web.vercel.app`, not `useholyfit.com`. Two hosts serving identical
+   * pages is duplicate content, and the wrong one was winning.
+   *
+   * The canonical tag alone did not prevent it. Every page on that host already
+   * carries `<link rel="canonical" href="https://useholyfit.com">`, because
+   * `metadataBase` is absolute — and Google indexed the duplicate anyway. A
+   * canonical is a hint, not an instruction; `X-Robots-Tag: noindex` is the
+   * instruction.
+   *
+   * Scoped by `has: [{ type: 'host' }]`, so it applies only to *.vercel.app and
+   * never to the real domain. Sent as a header rather than a `<meta>` tag
+   * because robots.txt and the metadata route are generated at build time and
+   * cannot vary by request host; headers can.
+   */
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: '.*\\.vercel\\.app' }],
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]
+      }
+    ];
+  },
+
   images: {
     /*
      * The captures in `public/visuals` are screenshots of a UI: 11pt labels,
