@@ -13,8 +13,8 @@ import { site } from '@/config/site';
  * describing content the visitor cannot see as spam, and acts on it. So the
  * FAQ entities are generated from the same `faqs` array the page renders, and
  * there is no `aggregateRating` anywhere below — the app has no reviews yet,
- * and inventing them is both a policy violation and the exact thing the
- * `#made-by` section refuses to do in prose.
+ * and inventing them is both a Google policy violation and the thing the page
+ * itself refuses to do in prose.
  */
 
 /**

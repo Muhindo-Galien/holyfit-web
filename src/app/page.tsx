@@ -18,9 +18,9 @@ import { site } from '@/config/site';
  * What it does **not** borrow from those pages is their social proof. Glorify
  * opens with twenty million downloads and a 4.9 average; HolyFit has no users
  * yet, and numbers or testimonials invented to fill that space would be a lie
- * told on the same page as a privacy policy. The honest substitute is the
- * `#made-by` section: being small is the actual differentiator, so it is
- * claimed rather than hidden.
+ * told on the same page as a privacy policy. So the page claims nothing it
+ * cannot show, and the space where a competitor puts its numbers is simply
+ * left empty.
  */
 
 /** One feature, told as a claim beside a picture of it. */
@@ -345,31 +345,6 @@ export default function HomePage() {
             ))}
           </ul>
         </div>
-      </section>
-
-      {/* --------------------------------------------------------- Made small */}
-      <section id="made-by" className="mx-auto max-w-3xl px-5 py-24 sm:px-8 sm:py-32">
-        <Reveal>
-          <h2 className="section-title text-balance">Made by one person, on purpose</h2>
-          <div className="lede mt-6 space-y-5 text-muted">
-            <p>
-              {site.name} has no investors, no growth team and no advertising, which means nothing in it is there to
-              make you open it more often. There is no engagement to optimise, so the app is free to be quiet.
-            </p>
-            <p>
-              It also means there are no download numbers to put on this page and no testimonials to quote.{' '}
-              <strong className="text-ink">It is new, and you would be early.</strong> That is the honest version, and
-              it seemed a poor idea to write anything else directly above a privacy policy.
-            </p>
-            <p>
-              If you use it and something is wrong, the person who wrote it reads the email:{' '}
-              <a href={`mailto:${site.supportEmail}`} className="text-accent underline underline-offset-4">
-                {site.supportEmail}
-              </a>
-              .
-            </p>
-          </div>
-        </Reveal>
       </section>
 
       {/* --------------------------------------------------------------- FAQ */}
