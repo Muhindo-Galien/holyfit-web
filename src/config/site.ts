@@ -26,7 +26,7 @@ export const site = {
   name: 'HolyFit',
 
   /** One line, used in metadata and as the hero subtitle. */
-  tagline: 'A daily rhythm of study, reflection and prayer.',
+  tagline: 'A daily rhythm of Bible study, reflection and prayer.',
 
   /*
    * Metadata only — the search-result snippet, the OG card and the Twitter

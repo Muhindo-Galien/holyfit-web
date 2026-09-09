@@ -56,18 +56,30 @@ export const metadata: Metadata = {
    * correctly, which is the reason to keep it rather than delete it.
    */
   keywords: [
+    // Intent — what someone is trying to build. These are the terms the
+    // positioning is aimed at, and they lead for that reason.
     'Christian lifestyle routine',
     'daily Christian routine',
+    'spiritual habit tracker',
     'Christian habit tracker',
     'spiritual discipline app',
-    'Bible reading routine',
-    'daily devotional routine',
-    'prayer routine',
-    'quiet time routine',
+    'build a quiet time habit',
+    // Practice — what they will actually do in the app. Taken from how the
+    // category names itself: "quiet time" and "daily devotional" are settled
+    // terms with their own app categories, not synonyms invented here.
+    'quiet time app',
+    'daily devotional app',
+    'Bible study app',
     'Bible reading plan',
-    'prayer journal',
+    'prayer journal app',
     'Christian reflection journal',
-    'faith habit building'
+    'scripture reading routine',
+    // Difference — long-tail, and the only terms on this list HolyFit can win
+    // outright, because they describe what competitors do that it refuses to.
+    // Hallow, Glorify and the habit trackers all lean on streaks and ads.
+    'devotional app without streaks',
+    'private prayer journal',
+    'Christian app with no ads or tracking'
   ],
   authors: [{ name: site.operator }],
   openGraph: {

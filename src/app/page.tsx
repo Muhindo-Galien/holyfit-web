@@ -126,6 +126,14 @@ const faqs = [
     a: 'No. Not your notes, not your prayers, not your journal, not your routine. There is no sharing feature and no public profile. Every row of your data is fenced off in the database by a rule that checks it belongs to you before it is returned, including for us.'
   },
   {
+    /* The question the category actually gets asked, and the one place the
+       difference between this and a devotional app can be stated plainly
+       rather than implied. It earns its place as copy; that it also carries
+       the terms people search for is a second reason, not the first. */
+    q: `Is ${site.name} a devotional app?`,
+    a: `Not in the usual sense. A devotional app hands you today's reading and today's thought. ${site.name} asks what your routine is and then keeps it: you bring the passages, set the hours, and it reminds you and gets out of the way. There is no daily content written by us, no streak to defend, and nothing that turns red when you miss a day.`
+  },
+  {
     q: 'Which translations can I read in?',
     a: 'The list is served from our own API rather than built into the app, so translations can be added as licences allow without waiting for an App Store release. You pick one in Profile, and it is used for new plans.'
   },
@@ -169,11 +177,12 @@ export default function HomePage() {
                 below the same mark in the header, which said the name twice
                 before the page had said anything once. */}
             <h1 className="hero-title mx-auto max-w-3xl text-balance">
-              A daily rhythm of study, reflection and prayer.
+              A daily rhythm of Bible study, reflection and prayer.
             </h1>
 
             <p className="lede mx-auto mt-7 max-w-xl text-pretty text-muted">
-              You choose the passages and the hours. {site.name} remembers, reminds, and gets out of the way.
+              A Christian daily routine you set yourself: Bible reading, prayer and reflection, at hours you choose.{' '}
+              {site.name} remembers, reminds, and gets out of the way.
             </p>
 
             <div className="mt-10 flex flex-col items-center gap-4">
@@ -225,12 +234,12 @@ export default function HomePage() {
           <h2 className="section-title">What it is</h2>
           <div className="lede mt-6 space-y-5 text-muted">
             <p>
-              Most reading apps are built around a plan you are handed and a streak you are afraid to break. Both work
-              until the first day you miss, and then they mostly work against you.
+              Most Christian devotional apps are built around a plan you are handed and a streak you are afraid to
+              break. Both work until the first day you miss, and then they mostly work against you.
             </p>
             <p>
               <strong className="text-ink">{site.name} is built around a routine you set yourself.</strong> You say how
-              many times a day you want to sit down (to read, to pray, to write) and at what hours. Everything else
+              many times a day you want your quiet time (to read, to pray, to write) and at what hours. Everything else
               follows from that one answer.
             </p>
             <p>
