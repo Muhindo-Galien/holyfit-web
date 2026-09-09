@@ -1,0 +1,411 @@
+@import 'tailwindcss';
+
+/*
+ * The app's palette, restated for the web.
+ *
+ * Values copied from `holyfit-app/src/constants/theme.ts` rather than re-picked,
+ * so the site and the thing it advertises are visibly the same product. The two
+ * files have to be edited together; there is no shared package, and inventing
+ * one for eight colours would be worse than the duplication.
+ */
+:root {
+  /* `Colors.light` — background, backgroundElement, backgroundSelected, text,
+     textSecondary. Copied value for value, not re-picked. */
+  --background: #ffffff;
+  --surface: #f0f0f3;
+  --elevated: #e0e1e6;
+  /* The app draws borders in `backgroundSelected` — the same colour it fills a
+     selected row with. One value doing both jobs is the app's decision, kept. */
+  --line: #e0e1e6;
+  --text: #000000;
+  --text-secondary: #60646c;
+  /* `brandSurface`: the wash the app opens on. Not the page background — the
+     app reserves it for brand surfaces, and so does this page. */
+  --brand-surface: #f2eff8;
+  --accent: #5b72ef;
+  --danger: #c5221f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* `Colors.dark`. Pure black, as the app is.
+       This used to be `brandSurface` (#121019) on the theory that a full-bleed
+       #000 marketing page reads as a void on a desktop monitor. That may be
+       true of marketing pages in general and is beside the point here: the
+       screenshots on this page are of an app whose dark ground is #000, and a
+       near-black page behind them made every handset look like it was showing
+       a slightly different black. Brand identity beat the theory. */
+    --background: #000000;
+    --surface: #212225;
+    --elevated: #2e3135;
+    --line: #2e3135;
+    --text: #ffffff;
+    --text-secondary: #b0b4ba;
+    --brand-surface: #121019;
+    /* The one deliberate departure from `Colors.dark`, which has no dark accent
+       because the app never sets #5b72ef as text on black — that pairing is
+       4.0:1 and fails AA. This page does, in links, so it needs the lift. */
+    --accent: #8b9bf5;
+    --danger: #f2685e;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-brand-surface: var(--brand-surface);
+  --color-elevated: var(--elevated);
+  --color-line: var(--line);
+  --color-ink: var(--text);
+  --color-muted: var(--text-secondary);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/*
+ * The get-started orb field, flattened to a left-to-right wash — the same five
+ * stops, in the same order, as `AmbientGradient` in the app.
+ */
+.brand-wash {
+  background-image: linear-gradient(90deg, #5b72ef 0%, #e36fd2 22%, #7bd44b 55%, #3fbf7f 76%, #f0a05a 100%);
+}
+
+/*
+ * The orb field, as the app paints it.
+ *
+ * These are `ORBS` from `holyfit-app/src/components/GenericComponents/
+ * ambientBackground.tsx` — the same six, in the same order, with their hues,
+ * fractional centres, radii and opacities carried over one for one, and the
+ * same three-stop falloff (full, 45% at the midpoint, nothing at the rim).
+ * The mid stop is not decoration: it pulls the falloff outward so the core of
+ * each orb stays saturated instead of washing out from the centre.
+ *
+ * It replaces four orbs in four colours at invented positions, which shared a
+ * palette with the app and nothing else. This is the composition the visitor
+ * meets on the get-started screen, which is the point.
+ *
+ * The one thing that cannot be carried over is the aspect. The app sizes every
+ * radius off `max(width, height)` — on a portrait phone that is the height, and
+ * the orbs come out wider than the screen. A landscape hero has no equivalent,
+ * so each radius here is a percentage of the axis it lies on: the orbs follow
+ * the box the way the app's follow the canvas, and stretch rather than crop.
+ * At this softness the shape of a blob is not what anyone reads; where the
+ * colours sit is, and that is exact.
+ *
+ * Opacity is applied per stop via `color-mix` rather than to the layer, because
+ * a `radial-gradient` cannot carry one and stacked layers each need their own.
+ */
+.orb-field {
+  /* `AmbientOrbs`' `intensity`, and set to the value the app itself uses
+     wherever body copy sits on the field. The app runs the orbs at full
+     strength only on get-started, whose entire content is a 52px wordmark and
+     one line of tagline; `auth-screen` — a form, with real text on it — dials
+     them to 0.3, and the reason is recorded in the prop's own comment: at 1.0
+     secondary text over the indigo orb measures 2.7:1 and fails AA.
+
+     Both places this field appears on the site carry body copy, so both take
+     the auth-screen value. Measured, not assumed — and the model was checked
+     against the app's own figure first: `--text-secondary` over the indigo orb
+     at full strength comes out at 2.69:1 here, which is the 2.7:1 the app
+     recorded. That same pairing is the worst on this page, and 0.3 lifts it to
+     4.78:1. Lime, the strongest orb, goes 3.51:1 → 5.08:1. Dark mode is easier
+     throughout: the orbs lighten a black ground rather than darken a white one,
+     and the worst case there is lime at 6.31:1. */
+  --orb-intensity: 0.3;
+
+  background-color: var(--background);
+  background-image:
+    /* lime — x 0.5, y 0.22, size 0.42, opacity 0.85 */
+    radial-gradient(
+      42.0% 42.0% at 50.0% 22.0%,
+      color-mix(in oklab, #7bd44b calc(85% * var(--orb-intensity)), transparent) 0%,
+      color-mix(in oklab, #7bd44b calc(38% * var(--orb-intensity)), transparent) 55%,
+      transparent 100%
+    ),
+    /* amber — x 0.86, y 0.44, size 0.3, opacity 0.7 */
+    radial-gradient(
+      30.0% 30.0% at 86.0% 44.0%,
+      color-mix(in oklab, #f0a05a calc(70% * var(--orb-intensity)), transparent) 0%,
+      color-mix(in oklab, #f0a05a calc(31% * var(--orb-intensity)), transparent) 55%,
+      transparent 100%
+    ),
+    /* magenta — x 0.24, y 0.56, size 0.26, opacity 0.7 */
+    radial-gradient(
+      26.0% 26.0% at 24.0% 56.0%,
+      color-mix(in oklab, #e36fd2 calc(70% * var(--orb-intensity)), transparent) 0%,
+      color-mix(in oklab, #e36fd2 calc(31% * var(--orb-intensity)), transparent) 55%,
+      transparent 100%
+    ),
+    /* indigo — x 0.12, y 0.73, size 0.28, opacity 0.6 */
+    radial-gradient(
+      28.0% 28.0% at 12.0% 73.0%,
+      color-mix(in oklab, #5b72ef calc(60% * var(--orb-intensity)), transparent) 0%,
+      color-mix(in oklab, #5b72ef calc(27% * var(--orb-intensity)), transparent) 55%,
+      transparent 100%
+    ),
+    /* jade — x 0.74, y 0.8, size 0.3, opacity 0.6 */
+    radial-gradient(
+      30.0% 30.0% at 74.0% 80.0%,
+      color-mix(in oklab, #3fbf7f calc(60% * var(--orb-intensity)), transparent) 0%,
+      color-mix(in oklab, #3fbf7f calc(27% * var(--orb-intensity)), transparent) 55%,
+      transparent 100%
+    ),
+    /* blush — x 0.9, y 0.09, size 0.22, opacity 0.55 */
+    radial-gradient(
+      22.0% 22.0% at 90.0% 9.0%,
+      color-mix(in oklab, #f2a0c0 calc(55% * var(--orb-intensity)), transparent) 0%,
+      color-mix(in oklab, #f2a0c0 calc(25% * var(--orb-intensity)), transparent) 55%,
+      transparent 100%
+    );
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Anchored sections land below the sticky header instead of under it. */
+  scroll-padding-top: 5.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+  /* The app's default. `AppText` inherits React Native's 14, and 15 is the size
+     the app actually sets more often than any other — 27 declarations to 14's
+     26, and both well clear of the next. The browser's 16 is a web convention
+     the app does not share, and anything on this page that does not ask for a
+     size should land in the app's range rather than above it. */
+  font-size: 0.9375rem;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Focus that is visible on both grounds, since the palette flips underneath it. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --------------------------------------------------------------- The device
+ *
+ * The frame the captures in `public/visuals` sit in. A bare screenshot on a
+ * page reads as an attachment; the same image in a handset reads as the app.
+ */
+.device-screen {
+  /* All that survives of the app's palette here.
+   *
+   * There were six of these, feeding a reconstruction of the app's screens in
+   * CSS. Real captures replaced that, so the rest went with it. This one
+   * remains because it backs the screen while an image is still loading, and a
+   * white flash inside a black handset is worse than a moment of nothing. */
+  --app-bg: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .device-screen {
+    --app-bg: #000000;
+  }
+}
+
+.device {
+  /* Scales as one unit. The screen is laid out at a fixed 300×620 so the type
+     inside keeps the app's real proportions, and the whole thing is then scaled
+     to fit — type that reflowed at each breakpoint would stop being a picture of
+     the app and become a bad responsive layout of its own. */
+  width: 300px;
+  flex: none;
+}
+
+.device-frame {
+  position: relative;
+  padding: 10px;
+  border-radius: 46px;
+  background: linear-gradient(160deg, #3a3a40, #17171b 40%, #2b2b31);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.4) inset,
+    0 30px 60px -20px rgba(0, 0, 0, 0.45),
+    0 8px 20px -8px rgba(0, 0, 0, 0.3);
+}
+
+.device-screen {
+  position: relative;
+  /* The captures' own ratio, applied to whatever width the bezel leaves.
+   *
+   * This was a hard `652px`, worked out as 300 × (2622 / 1206) — from the
+   * device's *outer* width, which the screen never has. The frame spends 10px a
+   * side on bezel, so the screen is 280px wide and that height was 7% too tall
+   * for it. `object-cover` resolved the mismatch the only way it can: it scaled
+   * each capture until it covered the box and shaved ten points off either
+   * side, while the handset itself stood up too narrow for its height. That is
+   * the stretched look, and no amount of re-measuring a fixed height survives
+   * the next change to the padding — so state the ratio and let the box follow
+   * the width it actually gets. */
+  aspect-ratio: 1206 / 2622;
+  overflow: hidden;
+  border-radius: 36px;
+  background: var(--app-bg);
+}
+
+/* The cut-out. Absent, a mockup reads as a drawing of a phone rather than a phone. */
+.device-island {
+  position: absolute;
+  left: 50%;
+  top: 9px;
+  z-index: 10;
+  height: 26px;
+  width: 88px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #000;
+}
+
+@media (max-width: 420px) {
+  .device {
+    width: 260px;
+  }
+  .device-frame {
+    padding: 8px;
+    border-radius: 40px;
+  }
+  .device-screen {
+    /* No height here either. The ratio above already covers this width, and the
+       old 565px repeated the same mistake against a 244px screen. */
+    border-radius: 32px;
+  }
+}
+
+/* ------------------------------------------------------------ Scroll reveal
+ *
+ * Applied by `Reveal`, which adds `is-visible` when the element first enters
+ * the viewport. The resting state is the *visible* one so that anything which
+ * never receives the class — no JavaScript, an old browser, a crawler — is
+ * readable rather than permanently invisible.
+ */
+.reveal {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+
+/* ------------------------------------------------------------- Type scale
+ *
+ * Every size below is a number lifted from the app, not a web scale that
+ * happens to look adjacent to it. The page had drifted a long way: the hero was
+ * 72px and the legal headings 48px, when the largest type anywhere in HolyFit
+ * is the 52px wordmark on the get-started screen and the largest *heading* is
+ * 36px. Type that size does not read as the same product as the screenshots
+ * sitting next to it — it reads as a marketing page about some other app.
+ *
+ * Where each number comes from, all in `holyfit-app/src`:
+ *
+ *   hero-title        get-started `wordmark`      52 / lh 56 / ls -1   extraBold
+ *   page-title        headerCard `title`          36 / lh 40 / ls -0.9 extraBold
+ *   section-title     screenHeader `title`        28 / ls -0.5         extraBold
+ *   subsection-title  sectionHeading `title`      20 / ls -0.3         bold
+ *   lede              get-started `tagline`       17 / lh 24           regular
+ *   body-copy         headerCard `description`    15 / lh 22           regular
+ *
+ * Tracking is restated as `em` so it survives the step down on small screens —
+ * the app's `letterSpacing: -1` is -1px at 52px, which is -0.019em, and stays
+ * proportional where a fixed -1px would over-tighten a 34px heading.
+ *
+ * The small-screen values are one step down rather than equal to the app's,
+ * with one exception noted at `.body-copy`. A phone running the app shows short
+ * strings — a wordmark, a screen title; this page shows sentences in the same
+ * slots, and a sentence set at 52px on a 375px viewport wraps to five lines.
+ */
+.hero-title {
+  font-size: 2.125rem; /* 34px */
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.019em; /* -1 at 52 */
+}
+
+.page-title {
+  font-size: 1.875rem; /* 30px */
+  font-weight: 800;
+  line-height: 1.11;
+  letter-spacing: -0.025em; /* -0.9 at 36 */
+}
+
+.section-title {
+  font-size: 1.5625rem; /* 25px */
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: -0.018em; /* -0.5 at 28 */
+}
+
+.subsection-title {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em; /* -0.3 at 20 */
+}
+
+.lede {
+  font-size: 1rem; /* 16px */
+  line-height: 1.45;
+}
+
+/* The one size that does not grow: 15 is the app's commonest font size by a
+   wide margin, it is what every screenshot on this page is full of, and prose
+   that steps up to 16 or 17 beside them stops matching them. */
+.body-copy {
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.47; /* 22 at 15 */
+}
+
+.eyebrow {
+  font-size: 0.75rem; /* 12px */
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 640px) {
+  .hero-title {
+    font-size: 3.25rem; /* 52px — the app's ceiling, and now this page's */
+    line-height: 1.077; /* 56 at 52 */
+  }
+
+  .page-title {
+    font-size: 2.25rem; /* 36px */
+  }
+
+  .section-title {
+    font-size: 1.75rem; /* 28px */
+  }
+
+  .subsection-title {
+    font-size: 1.25rem; /* 20px */
+  }
+
+  .lede {
+    font-size: 1.0625rem; /* 17px */
+    line-height: 1.41; /* 24 at 17 */
+  }
+
+  .eyebrow {
+    font-size: 0.8125rem; /* 13px */
+  }
+}
