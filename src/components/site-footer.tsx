@@ -35,7 +35,7 @@ export default function SiteFooter() {
 
         <p className="mt-10 text-xs text-muted">
           © {new Date().getFullYear()} {site.operator}. Not affiliated with any denomination, church or
-          publisher. Scripture text is provided under licence by API.Bible and remains the property of its publishers.
+          publisher. Scripture text is provided under licence and remains the property of its publishers.
         </p>
       </div>
     </footer>

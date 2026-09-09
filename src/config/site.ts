@@ -161,14 +161,6 @@ export const subprocessors = [
     policy: 'https://railway.app/legal/privacy'
   },
   {
-    name: 'API.Bible',
-    role: 'Scripture text',
-    handles:
-      'The passage reference being read, for example "1 John 2:1". Never your identity: the request is made by our server with our key, not by your device.',
-    location: 'United States',
-    policy: 'https://scripture.api.bible/privacy'
-  },
-  {
     name: 'Apple',
     role: 'App distribution',
     handles:

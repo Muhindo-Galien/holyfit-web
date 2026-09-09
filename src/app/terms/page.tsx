@@ -141,8 +141,8 @@ const sections: LegalSection[] = [
     body: (
       <>
         <p>
-          Scripture is supplied to us under licence through API.Bible, and each translation remains the copyright of its
-          publisher. The attribution a translation’s licence requires is shown with the text in the app.
+          Scripture is supplied to us under licence through a third-party provider, and each translation remains the
+          copyright of its publisher. The attribution a translation’s licence requires is shown with the text in the app.
         </p>
         <p>
           You may read it in the app and quote from it as the translation’s own licence allows. You may not redistribute
