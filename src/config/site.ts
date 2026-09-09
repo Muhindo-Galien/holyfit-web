@@ -43,21 +43,26 @@ export const site = {
     'Build a daily Christian routine: Bible reading, prayer and reflection, at hours you choose. No feed, no streak-shaming, no ads, no tracking.',
 
   /*
-   * The canonical origin, and it must be the one the domain actually serves.
+   * The canonical origin, and it must be whichever host the domain actually
+   * serves rather than redirects.
    *
-   * This was the apex, which is not where the site lives: Vercel answers
-   * `https://useholyfit.com` with a 308 to `https://www.useholyfit.com/`. That
-   * made every URL derived from this constant a redirect — the sitemap listed
-   * four of them, robots.txt pointed at a fifth, and `metadataBase` resolved
-   * og:url and the OG image against a host that bounces. Google follows the
-   * redirect and then reports the pages as "Page with redirect" rather than
-   * indexing what the sitemap claimed, which is a self-inflicted diagnostic on
-   * a four-page site.
+   * That has now been both. It was the apex, which 308'd to `www`, so this was
+   * changed to `www`; the Vercel primary-domain setting was then flipped and
+   * `www` began 307'ing back to the apex, which made every canonical tag on
+   * the site point at a redirect. This is the apex again because that is what
+   * answers 200 today.
    *
-   * If the redirect is ever flipped to point at the apex instead, this is the
-   * line that has to change with it.
+   * Before changing it, check, do not assume:
+   *
+   *   curl -sI https://useholyfit.com/ | head -1
+   *   curl -sI https://www.useholyfit.com/ | head -1
+   *
+   * The one that answers 200 goes here. Everything derived from this constant
+   * — `metadataBase`, the canonical link on every page, all four sitemap
+   * entries, the sitemap line in robots.txt, og:url and the absolute OG image
+   * URL — is wrong the moment it names the redirecting host.
    */
-  url: 'https://www.useholyfit.com',
+  url: 'https://useholyfit.com',
 
   /**
    * The name the service is published under.

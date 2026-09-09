@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 
 import SiteFooter from '@/components/site-footer';
+import StructuredData, { siteGraph } from '@/components/structured-data';
 import SiteHeader from '@/components/site-header';
 import { site } from '@/config/site';
 
@@ -104,6 +105,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={jakarta.variable}>
       <body className="font-sans antialiased">
+        <StructuredData data={siteGraph} />
+
         {/* Ahead of the header in the DOM, so the first Tab press on a long
             legal page offers the way past the navigation. */}
         <a

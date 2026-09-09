@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { DeviceShot, DeviceVideo } from '@/components/device';
 import InstallButton from '@/components/install-button';
 import Reveal from '@/components/reveal';
+import StructuredData, { homeGraph } from '@/components/structured-data';
 import { site } from '@/config/site';
 
 /**
@@ -145,6 +146,10 @@ const faqs = [
 export default function HomePage() {
   return (
     <>
+      {/* Generated from `faqs` above, so the markup cannot drift from what the
+          page actually shows further down. */}
+      <StructuredData data={homeGraph(faqs)} />
+
       {/* ---------------------------------------------------------------- Hero */}
       {/*
         * Pulled up under the header, and padded back down by exactly as much.
