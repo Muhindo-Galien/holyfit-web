@@ -18,16 +18,16 @@ export default function SiteFooter() {
           </div>
 
           <nav className="flex flex-col gap-3 text-sm sm:flex-row sm:gap-8">
-            <Link href="/privacy" className="text-muted transition hover:text-ink">
+            <Link href="/privacy" className="inline-flex min-h-11 items-center text-muted transition hover:text-ink">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="text-muted transition hover:text-ink">
+            <Link href="/terms" className="inline-flex min-h-11 items-center text-muted transition hover:text-ink">
               Terms of Service
             </Link>
-            <Link href="/support" className="text-muted transition hover:text-ink">
+            <Link href="/support" className="inline-flex min-h-11 items-center text-muted transition hover:text-ink">
               Support
             </Link>
-            <a href={`mailto:${site.supportEmail}`} className="text-muted transition hover:text-ink">
+            <a href={`mailto:${site.supportEmail}`} className="inline-flex min-h-11 items-center text-muted transition hover:text-ink">
               {site.supportEmail}
             </a>
           </nav>

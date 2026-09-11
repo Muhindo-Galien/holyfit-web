@@ -398,7 +398,7 @@ export default function HomePage() {
               // is keyboard-operable for free, and is what a browser's own
               // find-in-page can expand.
               <details key={faq.q} className="group py-6">
-                <summary className="subsection-title flex cursor-pointer list-none items-center justify-between gap-6 marker:hidden">
+                <summary className="faq-row subsection-title flex cursor-pointer list-none items-center justify-between gap-6 marker:hidden">
                   {faq.q}
                   <span className="shrink-0 text-muted transition-transform duration-200 group-open:rotate-45">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">

@@ -126,20 +126,22 @@ export default function FeatureOrbit({ features }: { features: OrbitFeature[] })
       ref={sectionRef}
       id="features"
       aria-labelledby="features-heading"
-      className="relative"
+      className={live ? 'orbit-track relative' : 'relative'}
       /*
-       * The track grows with the list rather than being a fixed 340vh.
+       * The count, not the height.
        *
-       * A constant height meant every feature added shortened the stretch of
-       * scroll its own segment got: at seven, each was down to a third of a
-       * screen and they flicked past. 55vh apiece is brisk without being a
-       * flicker, and the 40 on top is the run-in before the first one and the
-       * run-out after the last.
+       * The track has to grow with the list — a constant height meant every
+       * feature added shortened the stretch of scroll its own segment got, and
+       * at seven each was down to a third of a screen — but it also has to be
+       * shorter on a phone, where four and a bit screens of scrubbing is a long
+       * way to travel through one section. An inline height cannot answer a
+       * media query, so the element carries the count and `.orbit-track` does
+       * the arithmetic at each breakpoint.
        *
-       * Only once live — before that the stack needs no track to scrub, and a
+       * Only once live: before that the stack needs no track to scrub, and a
        * section of nothing this tall would be a very long blank.
        */
-      style={live ? { height: `${features.length * 55 + 40}vh` } : undefined}
+      style={live ? ({ '--orbit-count': features.length } as React.CSSProperties) : undefined}
     >
       <h2 id="features-heading" className="sr-only">
         What HolyFit does

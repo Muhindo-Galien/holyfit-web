@@ -416,6 +416,11 @@ body {
 }
 
 
+/* A summary is the FAQ's only control, so it needs a control's tap area. */
+.faq-row {
+  min-height: 2.75rem;
+}
+
 /* ------------------------------------------------------------- Hero arch
  *
  * A hairline semicircle springing from either side of the handset and closing
@@ -552,6 +557,28 @@ body {
   font-size: 0.75rem;
   font-weight: 600;
   pointer-events: none;
+}
+
+/*
+ * Smaller pills on the smallest screens.
+ *
+ * At 320px a label sat 3px past the left edge. Shrinking the radius fixed that
+ * and broke something else: a tighter arc puts the two labels on each side
+ * closer together, and at 42vw they overlapped vertically. The arc is the wrong
+ * thing to shrink — the pill is. Less width clears the edge and less height
+ * clears its neighbour, and the radius stays where it wants to be.
+ */
+@media (max-width: 400px) {
+  .hero-arch-label {
+    padding: 0.25rem 0.5rem;
+    gap: 0.35rem;
+    font-size: 0.6875rem;
+  }
+
+  .hero-arch-dot {
+    width: 0.35rem;
+    height: 0.35rem;
+  }
 }
 
 .hero-arch-dot {
@@ -799,6 +826,22 @@ body {
     border-color 300ms ease;
 }
 
+/*
+ * The scrub track. `--orbit-count` comes from the component; the per-segment
+ * share and the run-in/run-out live here so they can change with the viewport.
+ */
+.orbit-track {
+  height: calc(var(--orbit-count) * 55vh + 40vh);
+}
+
+@media (max-width: 639px) {
+  .orbit-track {
+    /* Shorter per feature on a phone: the stage is a column rather than a ring,
+       so there is less to take in at each step. */
+    height: calc(var(--orbit-count) * 42vh + 30vh);
+  }
+}
+
 /* Roomier once there is room. Seven nodes on a 390px screen is the tight case;
    above it the labels can breathe. */
 @media (min-width: 640px) {
@@ -835,6 +878,63 @@ body {
   top: 50%;
   transform: translate(-50%, -50%) scale(var(--phone));
   transform-origin: center;
+}
+
+/*
+ * Below 640px the ring becomes a row, and that is not a compromise.
+ *
+ * Seven nodes cannot sit on an ellipse around a handset on a 390px screen.
+ * Clearing the phone needs a radius wider than the viewport, so the labels end
+ * up crowded onto the device, the phone has to shrink to about 135px to make
+ * even that work, and the result is a diagram of a ring rather than a ring.
+ *
+ * So on a phone the same seven become a wrapped row of pills above a handset at
+ * its full size. The content, the tabs, the scrub and the active state are all
+ * unchanged — only the arrangement differs, which is what a breakpoint is for.
+ *
+ * It sits *after* the base rules on purpose. It was written above them, where
+ * `.orbit-phone`'s own `position: absolute` and `transform: scale()` — same
+ * specificity, later in the file — quietly won, and the handset stayed pinned
+ * and shrunk while the pills correctly became a row. Nothing warns about that.
+ */
+@media (max-width: 639px) {
+  .orbit-stage {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  /* Both describe a circle that is no longer there. */
+  .orbit-ring,
+  .orbit-glow {
+    display: none;
+  }
+
+  .orbit-nodes {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .orbit-node {
+    position: static;
+    transform: none;
+    /* A comfortable target, which the 30px pill on the ellipse was not. */
+    min-height: 2.75rem;
+    padding-inline: 0.85rem;
+  }
+
+  .orbit-phone {
+    position: static;
+    /* Full size: `.device` already answers to the 420px breakpoint with its own
+       260px width, so there is nothing left to scale down. */
+    transform: none;
+  }
 }
 
 /* Screenshots are stacked inside the one handset and crossfaded. */
