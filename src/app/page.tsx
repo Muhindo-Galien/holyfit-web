@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { DeviceVideo } from '@/components/device';
 import InstallButton from '@/components/install-button';
+import ArchFruit from '@/components/arch-fruit';
 import FeatureOrbit, { type OrbitFeature } from '@/components/feature-orbit';
 import OrbField from '@/components/orb-field';
 import Reveal from '@/components/reveal';
@@ -34,20 +35,6 @@ import { site } from '@/config/site';
  * wrapping it. The colour is which of the app's `ORBS` each feature answers
  * to, and it is what the wash behind the phone turns to.
  */
-/**
- * What the arch over the handset carries.
- *
- * The three sittings, in the order the app lists them, each wearing the brand
- * orb its feature answers to. Angles are degrees from twelve o'clock, positive
- * clockwise, so the outer two spring from either side of the phone and the
- * middle one sits directly above it.
- */
-const sittings = [
-  { label: 'Read', angle: -64, color: '#7bd44b' },
-  { label: 'Pray', angle: 0, color: '#e36fd2' },
-  { label: 'Reflect', angle: 64, color: '#f0a05a' }
-];
-
 const features: OrbitFeature[] = [
   {
     id: 'routine',
@@ -179,21 +166,10 @@ export default function HomePage() {
               than as a device continuing past the edge. */}
           <Reveal delay={120}>
             <div className="hero-stage mt-14 sm:mt-16">
-              {/* The arch, and the handset hung inside it. The three sittings
-                  are the app's whole shape, so they are what the curve carries
-                  — not a repeat of the trust strip directly below. */}
-              <div className="hero-arch" aria-hidden="true">
-                <div className="hero-arch-line" />
-                {sittings.map(sitting => (
-                  <span
-                    key={sitting.label}
-                    className="hero-arch-label"
-                    style={{ '--label-angle': `${sitting.angle}deg`, '--label-color': sitting.color } as React.CSSProperties}
-                  >
-                    <span className="hero-arch-dot" />
-                    {sitting.label}
-                  </span>
-                ))}
+              {/* The arch, and the handset hung inside it. */}
+              <div className="hero-arch">
+                <div className="hero-arch-line" aria-hidden="true" />
+                <ArchFruit angles={[-55, 55]} />
               </div>
 
               <div className="hero-arch-phone relative">

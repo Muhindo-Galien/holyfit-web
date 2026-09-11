@@ -447,8 +447,8 @@ body {
  * level with the middle of the screen.
  */
 .hero-stage {
-  --arch-r: min(44vw, 11.5rem);
-  --arch-gap: 4.5rem;
+  --arch-r: min(46vw, 13rem);
+  --arch-gap: 2.25rem;
   /*
    * How far down the curve the outer labels sit, as a fraction of their stated
    * angle.
@@ -460,7 +460,7 @@ body {
    * place they fit. The deeper `--arch-gap` here is the other half of that:
    * it lowers the handset to make the room they move into.
    */
-  --arch-spread: 0.72;
+  --arch-spread: 1;
 
   display: flex;
   flex-direction: column;
@@ -469,7 +469,7 @@ body {
 
 @media (min-width: 640px) {
   .hero-stage {
-    --arch-r: 17rem;
+    --arch-r: 15rem;
     --arch-gap: 2.5rem;
     --arch-spread: 1;
   }
@@ -477,8 +477,8 @@ body {
 
 @media (min-width: 1024px) {
   .hero-stage {
-    --arch-r: 23.5rem;
-    --arch-gap: 2.5rem;
+    --arch-r: 15.5rem;
+    --arch-gap: 2.75rem;
   }
 }
 
@@ -504,48 +504,84 @@ body {
 }
 
 /*
- * Labels sit on the curve by the same polar placement the orbit uses: angle
- * measured from twelve o'clock, positive clockwise, so -70deg is upper left and
- * +70deg upper right.
+ * Set on the curve rather than beside it.
+ *
+ * The extra `rotate(var(--angle))` after the centring translate turns each word
+ * onto the tangent at its own position. That is what lets nine of them fit:
+ * rotated, a word occupies roughly its line-height horizontally instead of its
+ * full length, so the outermost pair still clears the handset on a phone-width
+ * screen where upright pills could not.
+ */
+/*
+ * The slot does not resize with the word.
+ *
+ * A typing effect changes the string on every frame, and a label centred on its
+ * own box would slide along the arc as the word grew — nine different widths,
+ * nine different positions. Fixing the width and centring the text inside it
+ * pins the label to its angle and lets the letters arrive within it.
  */
 .hero-arch-label {
   --angle: calc(var(--label-angle) * var(--arch-spread));
 
+  width: 8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15em;
   position: absolute;
   left: calc(50% + var(--arch-r) * sin(var(--angle)));
   top: calc(var(--arch-r) - var(--arch-r) * cos(var(--angle)));
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.35rem 0.7rem;
-  border-radius: 999px;
+  transform: translate(-50%, -50%) rotate(var(--angle));
   white-space: nowrap;
-  background: var(--background);
-  border: 1px solid var(--line);
+  pointer-events: none;
   color: var(--text-secondary);
-  font-size: 0.75rem;
+  font-size: 0.625rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+/* Sized in `em` so it tracks the label rather than needing its own breakpoints. */
+.hero-arch-caret {
+  width: 1px;
+  height: 1em;
+  background: currentColor;
+  opacity: 0.8;
+  animation: arch-caret 1.05s steps(2, start) infinite;
+}
+
+@keyframes arch-caret {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-arch-caret {
+    animation: none;
+    /* Nothing is being typed, so a caret would be claiming otherwise. */
+    display: none;
+  }
 }
 
 @media (min-width: 640px) {
   .hero-arch-label {
-    font-size: 0.8125rem;
+    font-size: 0.6875rem;
+    width: 9rem;
   }
 }
 
-.hero-arch-dot {
-  width: 0.4rem;
-  height: 0.4rem;
-  border-radius: 50%;
-  background: var(--label-color);
+@media (min-width: 1024px) {
+  .hero-arch-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+  }
 }
 
-/* The handset is pulled up into the arch so the curve springs from beside it
-   rather than floating above it. */
-/* Pulled up so its top sits `--arch-gap` below the apex. The arch's springing
-   points then fall level with the middle of the handset. */
+/* Pulled up so its top sits `--arch-gap` below the apex. The arch is shallow
+   enough that its springing points meet the handset in its upper third rather
+   than level with the middle of the screen. */
 .hero-arch-phone {
   margin-top: calc(var(--arch-gap) - var(--arch-r));
 }
