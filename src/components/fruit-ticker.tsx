@@ -69,6 +69,8 @@ export default function FruitTicker({ angle }: { angle: number }) {
         style={{ '--label-angle': `${angle}deg` } as React.CSSProperties}
         aria-hidden="true"
       >
+        {/* The dot an active orbit node wears, at full strength. */}
+        <span className="hero-arch-dot" />
         {animate ? (
           <Typewriter
             options={{

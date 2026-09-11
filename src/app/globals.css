@@ -571,35 +571,46 @@ body {
 /*
  * The ticker at the apex.
  *
- * The pill hugs its word rather than holding a fixed width.
+ * Dressed as an *active* orbit node, which is what "Routine" looks like when
+ * the feature section opens: `--elevated` fill, the border carrying its own
+ * brand colour, a dot at full strength and the text in `--text`. The four
+ * sittings around it keep the quieter treatment, so the arch says the same
+ * thing the ring does — one of these is live, the rest are waiting.
  *
- * It was fixed, sized for "Fruit of the Spirit" — the longest string in the
- * loop — so that nothing moved as the text changed. That held the geometry
- * still and looked wrong: "Joy" sat at the left of a pill more than three
- * times its width, with the rest dead space. A pill with a visible border
- * cannot carry that much emptiness without reading as broken.
+ * Sentence case and normal tracking for the same reason: the nodes are set
+ * that way, and uppercase with wide letter-spacing was the one thing here that
+ * belonged to no other component on the page.
  *
- * Hugging costs a resize on every character, which is the trade. It is the
- * right one here: the pill is centred on the apex by `translate(-50%, -50%)`,
- * so it grows symmetrically from its anchor and the centre never moves. The
- * breathing reads as typing, which is what it is.
+ * Jade rather than Routine's indigo. The style is the borrowed part; reusing
+ * the hue as well would claim this pill is the Routine label, which is sitting
+ * a few degrees away wearing exactly that colour.
  *
- * The min-width stops "Joy" collapsing into a nub.
+ * The pill hugs its word rather than holding a fixed width. Fixed — sized for
+ * "Fruit of the Spirit", the longest string in the loop — kept the geometry
+ * still and looked wrong: "Joy" sat at the left of a pill three times its
+ * width with the rest dead space. Hugging costs a resize per character, but
+ * `translate(-50%, -50%)` anchors the centre, so it grows symmetrically and the
+ * breathing reads as typing. The min-width stops "Joy" collapsing to a nub.
  */
 .hero-arch-ticker {
+  --label-color: #3fbf7f;
+
   width: auto;
   min-width: 5.5rem;
   justify-content: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.55rem;
+  background: var(--elevated);
+  border-color: var(--label-color);
   color: var(--text);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
 }
 
 @media (min-width: 640px) {
   .hero-arch-ticker {
     min-width: 6.5rem;
-    font-size: 0.75rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8125rem;
   }
 }
 
