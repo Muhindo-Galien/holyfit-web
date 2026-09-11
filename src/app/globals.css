@@ -448,7 +448,16 @@ body {
  */
 .hero-stage {
   --arch-r: min(46vw, 13rem);
-  --arch-gap: 2.25rem;
+  /*
+   * Deeper on a narrow screen, and that is what buys the labels their room.
+   *
+   * Four upright pills need more space than four rotated words did. At 390px
+   * the outer pair ran off the edge at full spread and onto the handset at any
+   * angle that kept them on screen — there is no angle that does both, because
+   * a 260px phone plus a pill either side is wider than the viewport. Dropping
+   * the phone further below the apex opens a band above it where all four fit.
+   */
+  --arch-gap: 5rem;
   /*
    * How far down the curve the outer labels sit, as a fraction of their stated
    * angle.
@@ -460,7 +469,7 @@ body {
    * place they fit. The deeper `--arch-gap` here is the other half of that:
    * it lowers the handset to make the room they move into.
    */
-  --arch-spread: 1;
+  --arch-spread: 0.72;
 
   display: flex;
   flex-direction: column;
@@ -504,46 +513,91 @@ body {
 }
 
 /*
- * Set on the curve rather than beside it.
+ * Upright pills on the curve, built like the orbit's nodes so the hero and the
+ * feature section read as one family.
  *
- * The extra `rotate(var(--angle))` after the centring translate turns each word
- * onto the tangent at its own position. That is what lets nine of them fit:
- * rotated, a word occupies roughly its line-height horizontally instead of its
- * full length, so the outermost pair still clears the handset on a phone-width
- * screen where upright pills could not.
- */
-/*
- * The slot does not resize with the word.
- *
- * A typing effect changes the string on every frame, and a label centred on its
- * own box would slide along the arc as the word grew — nine different widths,
- * nine different positions. Fixing the width and centring the text inside it
- * pins the label to its angle and lets the letters arrive within it.
+ * Not rotated onto the tangent any more. That was there to make nine typing
+ * words fit; four fixed labels have room to stand up, and upright is easier to
+ * read. The trade is that a pill's full width now counts against the handset,
+ * which is what fixes the angles: the inner pair sits above the phone's top
+ * edge, the outer pair clear of its sides, and nothing sits between — that band
+ * is where the phone is.
  */
 .hero-arch-label {
   --angle: calc(var(--label-angle) * var(--arch-spread));
 
-  width: 8rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.15em;
   position: absolute;
   left: calc(50% + var(--arch-r) * sin(var(--angle)));
   top: calc(var(--arch-r) - var(--arch-r) * cos(var(--angle)));
-  transform: translate(-50%, -50%) rotate(var(--angle));
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
   white-space: nowrap;
-  pointer-events: none;
+  background: var(--background);
+  border: 1px solid var(--line);
   color: var(--text-secondary);
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  opacity: 0.72;
+  pointer-events: none;
 }
 
-/* Sized in `em` so it tracks the label rather than needing its own breakpoints. */
-.hero-arch-caret {
+.hero-arch-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--label-color);
+}
+
+@media (min-width: 640px) {
+  .hero-arch-label {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8125rem;
+  }
+}
+
+/* ------------------------------------------------------------ Fruit ticker
+ *
+ * One line between the install button and the arch, which was the emptiest
+ * band left in the hero.
+ */
+.hero-fruit {
+  margin-top: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hero-fruit-label {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/*
+ * A fixed slot, left-aligned.
+ *
+ * The word changes on every frame while typing. Centred in an auto-width box it
+ * would grow from the middle outwards and drag the label beside it left and
+ * right; left-aligned in a fixed slot, the letters arrive and the line either
+ * side of them stays put. Wide enough for "Self-control", the longest of the
+ * nine.
+ */
+.hero-fruit-word {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15em;
+  width: 7.5rem;
+  color: var(--text);
+}
+
+.hero-fruit-caret {
   width: 1px;
   height: 1em;
   background: currentColor;
@@ -558,24 +612,9 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-arch-caret {
-    animation: none;
+  .hero-fruit-caret {
     /* Nothing is being typed, so a caret would be claiming otherwise. */
     display: none;
-  }
-}
-
-@media (min-width: 640px) {
-  .hero-arch-label {
-    font-size: 0.6875rem;
-    width: 9rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .hero-arch-label {
-    font-size: 0.75rem;
-    letter-spacing: 0.16em;
   }
 }
 

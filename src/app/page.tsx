@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { DeviceVideo } from '@/components/device';
 import InstallButton from '@/components/install-button';
-import ArchFruit from '@/components/arch-fruit';
+import FruitTicker from '@/components/fruit-ticker';
 import FeatureOrbit, { type OrbitFeature } from '@/components/feature-orbit';
 import OrbField from '@/components/orb-field';
 import Reveal from '@/components/reveal';
@@ -35,6 +35,22 @@ import { site } from '@/config/site';
  * wrapping it. The colour is which of the app's `ORBS` each feature answers
  * to, and it is what the wash behind the phone turns to.
  */
+/**
+ * What the arch over the handset carries: the four sittings, styled as the
+ * orbit's nodes are so the two compositions read as one family.
+ *
+ * Angles are degrees from twelve o'clock, positive clockwise. The inner pair
+ * sits above the phone's top edge and the outer pair clear of its sides —
+ * there is no room between those two bands, because that is exactly where the
+ * handset is.
+ */
+const archFeatures = [
+  { label: 'Routine', angle: -68, color: '#5b72ef' },
+  { label: 'Study', angle: -25, color: '#7bd44b' },
+  { label: 'Pray', angle: 25, color: '#e36fd2' },
+  { label: 'Reflect', angle: 68, color: '#f0a05a' }
+];
+
 const features: OrbitFeature[] = [
   {
     id: 'routine',
@@ -182,6 +198,8 @@ export default function HomePage() {
               <InstallButton />
               {site.installUrl ? <p className="max-w-sm text-sm text-muted">{site.installNote}</p> : null}
             </div>
+
+            <FruitTicker />
           </Reveal>
 
           {/* The app running, immediately — before the visitor has to read
@@ -194,9 +212,18 @@ export default function HomePage() {
           <Reveal delay={120}>
             <div className="hero-stage mt-14 sm:mt-16">
               {/* The arch, and the handset hung inside it. */}
-              <div className="hero-arch">
-                <div className="hero-arch-line" aria-hidden="true" />
-                <ArchFruit angles={[-55, 55]} />
+              <div className="hero-arch" aria-hidden="true">
+                <div className="hero-arch-line" />
+                {archFeatures.map(item => (
+                  <span
+                    key={item.label}
+                    className="hero-arch-label"
+                    style={{ '--label-angle': `${item.angle}deg`, '--label-color': item.color } as React.CSSProperties}
+                  >
+                    <span className="hero-arch-dot" />
+                    {item.label}
+                  </span>
+                ))}
               </div>
 
               <div className="hero-arch-phone relative">

@@ -16,11 +16,8 @@ import { useEffect, useState } from 'react';
  * site ships no runtime dependencies beyond React and Next, and one decorative
  * flourish is a poor reason to start.
  *
- * **The two are locked out of phase.** Both advance one word per cycle at the
- * same rate, starting a fixed distance apart in the list, so the gap between
- * them never changes and they can never land on the same word. Only the start
- * delay differs, which staggers them visually without letting them drift into
- * each other.
+ * The slot is a fixed width with the word centred in it, so a nine-letter fruit
+ * and a three-letter one do not shift the line around them as they swap.
  */
 
 const FRUIT = [
@@ -34,9 +31,6 @@ const FRUIT = [
   'Gentleness',
   'Self-control'
 ] as const;
-
-/** Coprime with nine, so the pair walks the whole list without ever meeting. */
-const OFFSET = 4;
 
 const TYPE_MS = 70;
 const DELETE_MS = 40;
@@ -91,7 +85,7 @@ function useTypewriter(startIndex: number, startDelay: number, enabled: boolean)
   return word;
 }
 
-export default function ArchFruit({ angles }: { angles: [number, number] }) {
+export default function FruitTicker() {
   /*
    * Typing is character-by-character motion in the reader's peripheral vision,
    * which is squarely what the setting is for. Under `reduce` the two words are
@@ -107,31 +101,24 @@ export default function ArchFruit({ angles }: { angles: [number, number] }) {
     return () => query.removeEventListener('change', sync);
   }, []);
 
-  const left = useTypewriter(0, 0, animate);
-  const right = useTypewriter(OFFSET, 900, animate);
+  const word = useTypewriter(0, 400, animate);
 
   return (
-    <>
-      {[left, right].map((word, i) => (
-        <span
-          key={i}
-          className="hero-arch-label"
-          style={{ '--label-angle': `${angles[i]}deg` } as React.CSSProperties}
-          aria-hidden="true"
-        >
-          {word}
-          <span className="hero-arch-caret" />
-        </span>
-      ))}
+    <p className="hero-fruit">
+      <span className="hero-fruit-label" aria-hidden="true">
+        Fruit of the Spirit
+      </span>
+      <span className="hero-fruit-word" aria-hidden="true">
+        {word}
+        <span className="hero-fruit-caret" />
+      </span>
 
       {/*
        * The list itself, for anything that cannot watch it arrive. A screen
        * reader gets the nine in one breath instead of a stream of half-typed
        * fragments, and it is what sits in the HTML for a crawler.
        */}
-      <span className="sr-only">
-        The fruit of the Spirit: {FRUIT.join(', ')}. Galatians 5:22–23.
-      </span>
-    </>
+      <span className="sr-only">The fruit of the Spirit: {FRUIT.join(', ')}. Galatians 5:22–23.</span>
+    </p>
   );
 }
