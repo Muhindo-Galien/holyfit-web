@@ -571,17 +571,25 @@ body {
 /*
  * The ticker at the apex.
  *
- * A fixed slot, because the text changes on every frame while typing and a pill
- * that resized with it would breathe in and out at the top of the arch. Wide
- * enough for "Fruit of the Spirit", which is the longest string in the loop —
- * everything else is a single word and sits comfortably inside it.
+ * The pill hugs its word rather than holding a fixed width.
  *
- * Left-aligned rather than centred: centred, the letters would grow outwards
- * from the middle and the caret would drift left as the word got longer.
+ * It was fixed, sized for "Fruit of the Spirit" — the longest string in the
+ * loop — so that nothing moved as the text changed. That held the geometry
+ * still and looked wrong: "Joy" sat at the left of a pill more than three
+ * times its width, with the rest dead space. A pill with a visible border
+ * cannot carry that much emptiness without reading as broken.
+ *
+ * Hugging costs a resize on every character, which is the trade. It is the
+ * right one here: the pill is centred on the apex by `translate(-50%, -50%)`,
+ * so it grows symmetrically from its anchor and the centre never moves. The
+ * breathing reads as typing, which is what it is.
+ *
+ * The min-width stops "Joy" collapsing into a nub.
  */
 .hero-arch-ticker {
-  width: 10rem;
-  justify-content: flex-start;
+  width: auto;
+  min-width: 5.5rem;
+  justify-content: center;
   color: var(--text);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -590,7 +598,7 @@ body {
 
 @media (min-width: 640px) {
   .hero-arch-ticker {
-    width: 12.5rem;
+    min-width: 6.5rem;
     font-size: 0.75rem;
   }
 }
