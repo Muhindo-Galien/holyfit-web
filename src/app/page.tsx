@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
@@ -86,6 +87,37 @@ const features: Feature[] = [
       <DeviceShot src="/visuals/refrelct-screen.PNG" alt="The reflection journal in HolyFit, one entry a day." />
     )
   }
+];
+
+/**
+ * The practice, somewhere other than a phone.
+ *
+ * Every other picture on this page is a screenshot, which sells the software
+ * and says nothing about the thing the software is for. These are the only
+ * images here of the actual practice.
+ *
+ * **No identifiable faces, and that is not an aesthetic preference.** Unsplash
+ * grants a copyright licence; it does not grant model releases, and a
+ * stranger's face on a page marketing a paid app is where that gap becomes a
+ * problem. Hands, a silhouette, an empty room — all of which read as "this
+ * could be you" rather than "look at this particular person", which is the
+ * better picture anyway.
+ *
+ * Nothing here claims to be a user. The captions name places, not people,
+ * because the page has no users to photograph yet and saying otherwise would
+ * be the same lie as an invented testimonial.
+ *
+ * Unsplash License (free, commercial use, no permission required). Sources:
+ *   table.jpg      unsplash.com/photos/b_SHPU5M3nk
+ *   sunrise.jpg    unsplash.com/photos/lPCu8HnGU2E
+ *   sanctuary.jpg  unsplash.com/photos/ry8c7ZWzu1s   Josh Applegate
+ *   pages.jpg      unsplash.com/photos/TNlHf4m4gpI   Aaron Burden
+ */
+const places = [
+  { src: '/people/table.jpg', caption: 'A kitchen table', alt: 'Two hands folded on an open Bible at a wooden table.' },
+  { src: '/people/sunrise.jpg', caption: 'Outside, before sunrise', alt: 'A person kneeling in silhouette against a misty sunrise.' },
+  { src: '/people/sanctuary.jpg', caption: 'A building built for it', alt: 'Empty wooden pews with morning light falling across the floor.' },
+  { src: '/people/pages.jpg', caption: 'Ten minutes, anywhere', alt: 'An open Bible with its pages lit by low warm light.' }
 ];
 
 const steps = [
@@ -298,6 +330,46 @@ export default function HomePage() {
           </div>
         </section>
       ))}
+
+      {/* ------------------------------------------------------------- Places */}
+      {/* Placed directly after four sections of handset screenshots, where the
+          change from product to practice does the most work. */}
+      <section className="border-y border-line/50 bg-surface">
+        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
+          <Reveal>
+            <p className="eyebrow text-muted">The practice</p>
+            <h2 className="section-title mt-4 max-w-2xl text-balance">It does not look the same for anyone</h2>
+            <p className="lede mt-5 max-w-2xl text-muted">
+              A sitting is a sitting whether it happens at a kitchen table before the house is up, on a train, or in a
+              building built for it. {site.name} has no opinion about where you are. It keeps the hours you set and
+              leaves the rest to you.
+            </p>
+          </Reveal>
+
+          <ul className="mt-12 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+            {places.map((place, index) => (
+              <Reveal key={place.src} delay={index * 70}>
+                <li>
+                  {/* 4:5, fixed by the wrapper rather than by the file, so a
+                      replacement image of any size drops in without relayout. */}
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-elevated">
+                    <Image
+                      src={place.src}
+                      alt={place.alt}
+                      fill
+                      // Two up on a phone, four on a wide screen, and never
+                      // wider than the 288px column the grid tops out at.
+                      sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 288px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <p className="mt-3 text-sm text-muted">{place.caption}</p>
+                </li>
+              </Reveal>
+            ))}
+          </ul>
+        </div>
+      </section>
 
       {/* ------------------------------------------------------- How it works */}
       <section id="how" className="mx-auto max-w-4xl px-5 py-24 sm:px-8 sm:py-32">
