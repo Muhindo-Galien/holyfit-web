@@ -595,11 +595,30 @@ body {
   }
 }
 
-.hero-fruit-caret {
+/* The library wraps its output in this; it needs to sit on the text baseline
+   rather than introduce a block of its own. */
+.hero-arch-ticker-text {
+  display: inline;
+}
+
+/*
+ * The cursor. `typewriter-effect` injects a stylesheet of its own unless
+ * `skipAddStyles` is set, so this is ours and the class name is passed in.
+ */
+.hero-arch-caret {
+  display: inline-block;
   width: 1px;
+  margin-left: 0.15em;
+  /* The library writes a pipe character into this element. `color:
+     transparent` hides that glyph and the background draws a rule in its
+     place, which keeps the caret the same weight as the hairline the arch is
+     made of at any font size. Both are needed: the width alone would clip the
+     pipe, but a clipped pipe is still a smudge of colour. */
+  color: transparent;
+  background: var(--text);
+  overflow: hidden;
+  vertical-align: -0.1em;
   height: 1em;
-  background: currentColor;
-  opacity: 0.8;
   animation: arch-caret 1.05s steps(2, start) infinite;
 }
 
@@ -610,7 +629,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-fruit-caret {
+  .hero-arch-caret {
     /* Nothing is being typed, so a caret would be claiming otherwise. */
     display: none;
   }

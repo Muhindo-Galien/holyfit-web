@@ -1,23 +1,32 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Typewriter from 'typewriter-effect';
 
 /**
- * Two words on the hero arch, typing their way through the fruit of the Spirit.
+ * The word at the top of the hero arch.
  *
- * Galatians 5:22–23, in the order the passage gives them. Nine will not fit on
- * an arc a phone can hold — laid out at once they run off a 390px screen — so
- * two positions cycle through all nine instead, which shows the whole list in
- * the space that holds two words.
+ * It opens on "Fruit of the Spirit", types its way through the nine of them —
+ * Galatians 5:22–23, in the order the passage gives them — and returns to the
+ * phrase before starting again. The phrase is what makes the loop legible:
+ * without it a single word appearing over a handset is just a word.
  *
- * **Written here rather than pulled from a package.** A typing effect is a
- * string slice on a timer; the smallest library that does it is a dependency,
- * a bundle entry and a hydration surface for about forty lines of logic. This
- * site ships no runtime dependencies beyond React and Next, and one decorative
- * flourish is a poor reason to start.
+ * It sits at the apex because that is the one place on the arc with nothing
+ * either side of it. The four sittings occupy the flanks, and the springing
+ * points are level with the phone.
  *
- * The slot is a fixed width with the word centred in it, so a nine-letter fruit
- * and a three-letter one do not shift the line around them as they swap.
+ * Typing is done by `typewriter-effect`, which replaced a hand-rolled hook
+ * here. Two things about it are worth knowing, because neither is obvious from
+ * the README:
+ *
+ *  - It renders nothing on the server. The component mounts empty and fills in
+ *    on the client, so nothing it types is in the HTML. The `sr-only` list
+ *    below is therefore not only an accessibility affordance — it is the only
+ *    copy of this content a crawler or a reader without JavaScript will ever
+ *    see, which is why it carries the whole list rather than a summary.
+ *  - It injects its own stylesheet for the cursor unless told not to. Ours is
+ *    styled with the rest of the arch, so `skipAddStyles` is on and the cursor
+ *    class is ours.
  */
 
 /** The anchor, then the list. Index 0 is what the loop returns to. */
@@ -32,68 +41,16 @@ const FRUIT = [
   'Faithfulness',
   'Gentleness',
   'Self-control'
-] as const;
-
-/* About a second a word, which is what was asked for: long enough to read a
-   short one, short enough that "Faithfulness" does not outstay it. */
-const TYPE_MS = 45;
-const DELETE_MS = 25;
-const HOLD_MS = 1000;
-const BETWEEN_MS = 160;
-
-function useTypewriter(startIndex: number, startDelay: number, enabled: boolean) {
-  // Explicitly `string`: `FRUIT` is `as const`, so inference would narrow this
-  // to the nine literals and reject every partially typed slice of them.
-  const [word, setWord] = useState<string>(FRUIT[startIndex % FRUIT.length]);
-
-  useEffect(() => {
-    if (!enabled) return;
-
-    let index = startIndex;
-    let chars = FRUIT[index % FRUIT.length].length;
-    let deleting = true;
-    let timer: ReturnType<typeof setTimeout>;
-
-    const tick = () => {
-      const full = FRUIT[index % FRUIT.length];
-
-      if (deleting) {
-        chars -= 1;
-        if (chars <= 0) {
-          deleting = false;
-          index += 1;
-          setWord('');
-          timer = setTimeout(tick, BETWEEN_MS);
-          return;
-        }
-        setWord(full.slice(0, chars));
-        timer = setTimeout(tick, DELETE_MS);
-        return;
-      }
-
-      chars += 1;
-      const next = FRUIT[index % FRUIT.length];
-      setWord(next.slice(0, chars));
-      if (chars >= next.length) {
-        deleting = true;
-        timer = setTimeout(tick, HOLD_MS);
-        return;
-      }
-      timer = setTimeout(tick, TYPE_MS);
-    };
-
-    timer = setTimeout(tick, startDelay);
-    return () => clearTimeout(timer);
-  }, [startIndex, startDelay, enabled]);
-
-  return word;
-}
+];
 
 export default function FruitTicker({ angle }: { angle: number }) {
   /*
    * Typing is character-by-character motion in the reader's peripheral vision,
-   * which is squarely what the setting is for. Under `reduce` the two words are
-   * simply printed and left alone.
+   * which is squarely what the setting is for. Under `reduce` the phrase is
+   * printed once and left alone, and the library never mounts.
+   *
+   * Starts false so the server and the first client render agree: the static
+   * phrase. Anything else is a hydration mismatch.
    */
   const [animate, setAnimate] = useState(false);
 
@@ -105,8 +62,6 @@ export default function FruitTicker({ angle }: { angle: number }) {
     return () => query.removeEventListener('change', sync);
   }, []);
 
-  const word = useTypewriter(0, 500, animate);
-
   return (
     <>
       <span
@@ -114,14 +69,39 @@ export default function FruitTicker({ angle }: { angle: number }) {
         style={{ '--label-angle': `${angle}deg` } as React.CSSProperties}
         aria-hidden="true"
       >
-        {word}
-        <span className="hero-fruit-caret" />
+        {animate ? (
+          <Typewriter
+            options={{
+              loop: true,
+              delay: 45,
+              deleteSpeed: 25,
+              skipAddStyles: true,
+              wrapperClassName: 'hero-arch-ticker-text',
+              cursorClassName: 'hero-arch-caret'
+            }}
+            /*
+             * Built with the fluent API rather than passed as `strings`,
+             * because the hold between words is the one timing that matters
+             * here and there is no option for it — `pauseFor` is a method on
+             * the instance, not a field on `options`. Queuing each word with
+             * its own pause is the only way to ask for about a second.
+             */
+            onInit={typewriter => {
+              FRUIT.forEach(word => {
+                typewriter.typeString(word).pauseFor(1000).deleteAll(25);
+              });
+              typewriter.start();
+            }}
+          />
+        ) : (
+          <span className="hero-arch-ticker-text">{FRUIT[0]}</span>
+        )}
       </span>
 
       {/*
-       * The list itself, for anything that cannot watch it arrive. A screen
+       * The list itself, and the only copy of it in the server HTML. A screen
        * reader gets the nine in one breath instead of a stream of half-typed
-       * fragments, and it is what sits in the HTML for a crawler.
+       * fragments, and it is what a crawler reads.
        */}
       <span className="sr-only">The fruit of the Spirit: {FRUIT.slice(1).join(', ')}. Galatians 5:22–23.</span>
     </>
