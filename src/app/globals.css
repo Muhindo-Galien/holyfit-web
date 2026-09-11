@@ -416,6 +416,140 @@ body {
 }
 
 
+/* ------------------------------------------------------------- Hero arch
+ *
+ * A hairline semicircle springing from either side of the handset and closing
+ * above it, with the three sittings set on the curve.
+ *
+ * It fills the hero's emptiest ground. The headline, the paragraph and the
+ * button are a narrow column down the middle, and the phone is narrower still,
+ * which left two wide blanks either side of the handset's upper half and a gap
+ * between the button and the phone that read as a missing element rather than
+ * as space. The arch spans exactly that.
+ *
+ * It is drawn as a full circle clipped to its top half rather than as an SVG
+ * path, so the hairline keeps an even weight at every size — a stroked path
+ * scaled with `preserveAspectRatio: none` would thin out at the apex and
+ * thicken at the springing points.
+ */
+/*
+ * The radius lives on the stage, not on the arch.
+ *
+ * It was on `.hero-arch`, where the handset — a *sibling*, not a child — could
+ * not see it. Custom properties inherit down, so `calc(var(--arch-r) * -0.34)`
+ * on the phone resolved against nothing, the declaration was thrown out as
+ * invalid, and the phone sat below the arch instead of inside it. Both need it,
+ * so it belongs to the element that contains both.
+ *
+ * `--arch-r` is set so the arch is wide enough to clear the handset and deep
+ * enough to spring from beside it: at full size the radius is the phone's own
+ * half-height plus the gap above it, which is what lands the springing points
+ * level with the middle of the screen.
+ */
+.hero-stage {
+  --arch-r: min(44vw, 11.5rem);
+  --arch-gap: 4.5rem;
+  /*
+   * How far down the curve the outer labels sit, as a fraction of their stated
+   * angle.
+   *
+   * At full spread on a narrow screen they landed on the handset and pushed
+   * "Reflect" against the viewport edge — a 390px screen has no room for a
+   * 260px phone *and* a label either side of it. Pulling them up the arc puts
+   * them above the phone's top edge instead of beside it, which is the only
+   * place they fit. The deeper `--arch-gap` here is the other half of that:
+   * it lowers the handset to make the room they move into.
+   */
+  --arch-spread: 0.72;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 640px) {
+  .hero-stage {
+    --arch-r: 17rem;
+    --arch-gap: 2.5rem;
+    --arch-spread: 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-stage {
+    --arch-r: 23.5rem;
+    --arch-gap: 2.5rem;
+  }
+}
+
+.hero-arch {
+  position: relative;
+  width: calc(var(--arch-r) * 2);
+  /* Half the circle, so the box ends level with the springing points. */
+  height: var(--arch-r);
+  overflow: visible;
+}
+
+/* The circle, with only its upper half showing. `clip-path` rather than a
+   parent with `overflow: hidden`, so the labels sitting on the curve are not
+   clipped along with it. */
+.hero-arch-line {
+  position: absolute;
+  inset: 0;
+  height: calc(var(--arch-r) * 2);
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  clip-path: inset(0 0 50% 0);
+  opacity: 0.7;
+}
+
+/*
+ * Labels sit on the curve by the same polar placement the orbit uses: angle
+ * measured from twelve o'clock, positive clockwise, so -70deg is upper left and
+ * +70deg upper right.
+ */
+.hero-arch-label {
+  --angle: calc(var(--label-angle) * var(--arch-spread));
+
+  position: absolute;
+  left: calc(50% + var(--arch-r) * sin(var(--angle)));
+  top: calc(var(--arch-r) - var(--arch-r) * cos(var(--angle)));
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: var(--background);
+  border: 1px solid var(--line);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+@media (min-width: 640px) {
+  .hero-arch-label {
+    font-size: 0.8125rem;
+  }
+}
+
+.hero-arch-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--label-color);
+}
+
+/* The handset is pulled up into the arch so the curve springs from beside it
+   rather than floating above it. */
+/* Pulled up so its top sits `--arch-gap` below the apex. The arch's springing
+   points then fall level with the middle of the handset. */
+.hero-arch-phone {
+  margin-top: calc(var(--arch-gap) - var(--arch-r));
+}
+
 /* ----------------------------------------------------------------- Orbit
  *
  * The four features as one composition: a phone at the centre, four nodes on a
