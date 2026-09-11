@@ -52,7 +52,7 @@ export default function SiteHeader() {
         <nav className="flex items-center gap-6 text-[0.9375rem]">
           {/* Hidden on the narrowest screens rather than folded into a menu:
               both are anchors into a page the visitor can simply scroll. */}
-          <Link href="/#how" className="hidden text-muted transition hover:text-ink sm:block">
+          <Link href="/#routine" className="hidden text-muted transition hover:text-ink sm:block">
             How it works
           </Link>
           <Link href="/#privacy" className="hidden text-muted transition hover:text-ink sm:block">

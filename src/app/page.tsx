@@ -30,7 +30,6 @@ type Feature = {
   eyebrow: string;
   title: string;
   body: string;
-  points: string[];
   screen: ReactNode;
 };
 
@@ -40,10 +39,6 @@ const features: Feature[] = [
     eyebrow: 'The routine',
     title: 'It starts with one answer',
     body: 'How many times a day do you want to sit down, and when? Up to two sittings each of reading, prayer and reflection, at hours you pick. Everything else in the app follows from that: what today looks like, what it reminds you of, what it counts.',
-    points: [
-      'Two mornings and an evening is a routine. So is one sitting at 6am.',
-      'Change it whenever you like. Nothing you have written is lost when you do.'
-    ],
     screen: (
       <DeviceShot src="/visuals/routine.PNG" alt="Setting a routine in HolyFit: reading, prayer and reflection, each at an hour you choose." />
     )
@@ -53,10 +48,6 @@ const features: Feature[] = [
     eyebrow: 'Study',
     title: 'Read, and keep what it left you',
     body: 'Build a plan from the passages you actually want to read (a book, a theme, a list someone gave you) and set the days it runs. One passage at a time, in your translation, ticked off when you have read it.',
-    points: [
-      'Any passage will hold a note, so what you noticed on a Tuesday is still there in March.',
-      'A plan keeps the translation it began in, so a book is finished in the words it was started in.'
-    ],
     screen: (
       <DeviceShot src="/visuals/plan-passage.PNG" alt="A passage open in HolyFit, with the plan it belongs to above it." />
     )
@@ -66,10 +57,6 @@ const features: Feature[] = [
     eyebrow: 'Pray',
     title: 'A list you keep, not a wall you perform on',
     body: 'Write down what you are carrying and come back to it. Nobody else can see it. There is no feed, no sharing, and no other reader anywhere in the app.',
-    points: [
-      'Mark one answered and it stays in the list, quieter. That record is the point.',
-      'Prayer is a full sitting, so keeping it counts toward your day the same way reading does.'
-    ],
     screen: (
       <DeviceShot src="/visuals/prayer-sreen.PNG" alt="The prayer list in HolyFit." />
     )
@@ -79,41 +66,16 @@ const features: Feature[] = [
     eyebrow: 'Reflect',
     title: 'A few lines a day, where you can find them',
     body: 'One entry per day, private and searchable. The app works out your streak from the entries themselves rather than asking you to defend one.',
-    points: [
-      'Miss a day and nothing is lost. The entries you did write are still yours.',
-      'No reminders that guilt you, and nothing on the screen turns red.'
-    ],
     screen: (
       <DeviceShot src="/visuals/refrelct-screen.PNG" alt="The reflection journal in HolyFit, one entry a day." />
     )
   }
 ];
 
-const steps = [
-  {
-    title: 'Set your routine, once',
-    body: 'Tell HolyFit how your day is shaped and at what hours. It asks you this on the first run, and then leaves you alone.'
-  },
-  {
-    title: 'It reminds you, quietly',
-    body: 'Each sitting gets a reminder at the hour you picked, scheduled on your phone, by your phone. No server is ever told when you pray.'
-  },
-  {
-    title: 'Do the sitting',
-    body: 'Open the reminder and land on the thing it was about: today’s passage, your prayer list, or a blank entry for today. Not a home screen to navigate from.'
-  },
-  {
-    title: 'The day fills in',
-    body: 'Home shows what you have kept and what is next, worked out from your routine rather than stored beside it. There is no score.'
-  }
-];
-
 const promises = [
   ['No analytics', 'There is no analytics SDK in the app. Not a self-hosted one either. We do not know which screens you open or how long you stay.'],
   ['No advertising', 'No ad network, no ad identifier, no advertising profile. Nothing about you is used to sell anything to you.'],
-  ['No tracking across apps', 'Nothing follows you off HolyFit. The app has no reason to ask permission to track you, and never does.'],
   ['No push notifications', 'Reminders are scheduled by your phone, on your phone. There is no push token, so no server learns the hours you keep.'],
-  ['No location, contacts or health data', 'Never requested, never read, never stored.'],
   ['No selling or sharing', 'Not sold, not rented, not handed to anyone for their own purposes, in the senses GDPR and California law give those words.']
 ];
 
@@ -320,10 +282,6 @@ export default function HomePage() {
               many times a day you want your quiet time (to read, to pray, to write) and at what hours. Everything else
               follows from that one answer.
             </p>
-            <p>
-              It is a private app. There is no feed, no other readers, no sharing, and no way for anyone, including us,
-              to browse what you have written.
-            </p>
           </div>
         </Reveal>
       </section>
@@ -348,17 +306,6 @@ export default function HomePage() {
                 <p className="eyebrow text-muted">{feature.eyebrow}</p>
                 <h2 className="section-title mt-4 text-balance">{feature.title}</h2>
                 <p className="lede mt-5 text-muted">{feature.body}</p>
-
-                <ul className="mt-7 space-y-4">
-                  {feature.points.map(point => (
-                    <li key={point} className="body-copy flex gap-3.5 text-muted">
-                      {/* The brand wash as a bullet: the only place five colours
-                          belong at this size. */}
-                      <span className="brand-wash mt-2.5 size-1.5 shrink-0 rounded-full" />
-                      {point}
-                    </li>
-                  ))}
-                </ul>
               </Reveal>
 
               <Reveal delay={100} className="flex justify-center lg:flex-1">
@@ -377,29 +324,6 @@ export default function HomePage() {
         </section>
       ))}
 
-      {/* ------------------------------------------------------- How it works */}
-      <section id="how" className="mx-auto max-w-4xl px-5 py-24 sm:px-8 sm:py-32">
-        <Reveal>
-          <h2 className="section-title">How a day goes</h2>
-        </Reveal>
-
-        <ol className="mt-14 space-y-10">
-          {steps.map((step, index) => (
-            <Reveal key={step.title} delay={index * 70}>
-              <li className="flex gap-6">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-ink text-base font-bold tabular-nums text-background">
-                  {index + 1}
-                </span>
-                <div className="pt-1.5">
-                  <h3 className="subsection-title">{step.title}</h3>
-                  <p className="body-copy mt-2 text-muted">{step.body}</p>
-                </div>
-              </li>
-            </Reveal>
-          ))}
-        </ol>
-      </section>
-
       {/* ----------------------------------------------------------- Privacy */}
       <section id="privacy" className="bg-surface">
         <div className="mx-auto max-w-5xl px-5 py-24 sm:px-8 sm:py-32">
@@ -412,7 +336,9 @@ export default function HomePage() {
             </p>
           </Reveal>
 
-          <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Four, so two columns divides evenly. Three columns left an orphan on
+              the second row, which reads as a card that failed to load. */}
+          <ul className="mt-12 grid gap-4 sm:grid-cols-2">
             {promises.map(([title, body], index) => (
               <Reveal key={title} delay={index * 50}>
                 <li className="h-full rounded-2xl border border-line bg-background p-6">
