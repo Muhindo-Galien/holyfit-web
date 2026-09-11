@@ -416,6 +416,229 @@ body {
 }
 
 
+/* ----------------------------------------------------------------- Orbit
+ *
+ * The four features as one composition: a phone at the centre, four nodes on a
+ * ring around it, and a wash behind that rotates to whichever node is active.
+ *
+ * The whole stage is sized from one custom property. Everything else — ring
+ * radius, node offset, how far the phone is scaled down — is derived from it,
+ * so the composition survives a viewport change by being redrawn at a
+ * different size rather than by being re-tuned at each breakpoint.
+ */
+.orbit-stage {
+  /*
+   * The stage is an ellipse, not a circle, and that is forced by the subject.
+   *
+   * A handset is roughly 2.2 times taller than it is wide. Put four nodes on a
+   * *circle* around one and the radius that clears the phone's sides is far
+   * too small to clear its top and bottom — the twelve and six o'clock nodes
+   * land on the screen. Measured on a 390px viewport the first attempt had a
+   * 143px radius against a phone 175px from centre to top.
+   *
+   * So the ring gets its own horizontal and vertical radii, and the nodes are
+   * placed with `sin()`/`cos()` rather than the rotate-translate-unrotate trick,
+   * which can only describe a circle.
+   */
+  --stage-w: min(90vw, 22rem);
+  --stage-h: 27rem;
+  --phone: 0.45;
+
+  /* Inset from the stage edge. The horizontal inset is the larger of the two
+     because a node's label runs horizontally: at three and nine o'clock its own
+     width sticks out past the ring, and on a 390px viewport that put "Reflect"
+     half off the screen. */
+  --rx: calc(var(--stage-w) / 2 - 2.8rem);
+  --ry: calc(var(--stage-h) / 2 - 1.4rem);
+
+  position: relative;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  margin-inline: auto;
+  isolation: isolate;
+}
+
+@media (min-width: 640px) {
+  .orbit-stage {
+    --stage-w: min(70vw, 28rem);
+    --stage-h: 30rem;
+    --phone: 0.56;
+    --rx: calc(var(--stage-w) / 2 - 2rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .orbit-stage {
+    --stage-w: 32rem;
+    --stage-h: 34rem;
+    --phone: 0.62;
+    --rx: calc(var(--stage-w) / 2 - 1.6rem);
+  }
+}
+
+/* The rotating wash. `--glow-angle` points it at the active node; the rotation
+   is on the wrapper so the gradient itself never has to be recomputed. */
+.orbit-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: 50%;
+  transform: rotate(var(--glow-angle));
+  transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.orbit-glow::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -12%;
+  width: 74%;
+  height: 74%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--glow-color), transparent 72%);
+  opacity: 0.42;
+  filter: blur(28px);
+  transition: background 900ms ease;
+}
+
+/* The track. A hairline, not a border, so it reads as a path rather than a
+   container the phone is sitting inside. */
+.orbit-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--rx) * 2);
+  height: calc(var(--ry) * 2);
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  opacity: 0.6;
+}
+
+.orbit-nodes {
+  position: absolute;
+  inset: 0;
+}
+
+/*
+ * Each node is placed by rotating it out to the ring and then rotating it back
+ * upright, which is the whole trick: one angle positions it, its negative keeps
+ * the label horizontal. Without the second rotation the words would lie on
+ * their sides at three and nine o'clock.
+ */
+.orbit-node {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  /* Polar placement: angle measured from twelve o'clock, clockwise. The
+     translate keeps the node's own centre on the ellipse rather than its
+     top-left corner. */
+  left: calc(50% + var(--rx) * sin(var(--node-angle)));
+  top: calc(50% - var(--ry) * cos(var(--node-angle)));
+  transform: translate(-50%, -50%);
+  transition:
+    color 300ms ease,
+    background-color 300ms ease,
+    border-color 300ms ease;
+}
+
+.orbit-node.is-active {
+  background: var(--elevated);
+  border-color: var(--node-color);
+  color: var(--text);
+}
+
+.orbit-node-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--node-color);
+  opacity: 0.45;
+  transition: opacity 300ms ease;
+}
+
+.orbit-node.is-active .orbit-node-dot {
+  opacity: 1;
+}
+
+/* The phone, scaled from the stage rather than given a size of its own, so it
+   keeps the exact proportions `.device` is built at. */
+.orbit-phone {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(var(--phone));
+  transform-origin: center;
+}
+
+/* Screenshots are stacked inside the one handset and crossfaded. */
+.orbit-screen {
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.orbit-screen.is-active {
+  opacity: 1;
+}
+
+/* Panels are stacked in a grid cell rather than absolutely positioned, so the
+   column is as tall as the longest of them and the layout never jumps when the
+   active one changes. */
+.orbit-panels {
+  display: grid;
+}
+
+.orbit-panel {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition:
+    opacity 500ms ease,
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.orbit-panel.is-active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/*
+ * Reduced motion keeps the orbit and drops the travel.
+ *
+ * The scroll-driven change of content is not itself the problem the setting
+ * describes — the page still scrolls normally and nothing moves against the
+ * wheel. What goes is the sweep: the wash snaps to its node, panels cut rather
+ * than rise, and the smooth-scroll on a node press becomes a jump.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .orbit-glow,
+  .orbit-glow::before,
+  .orbit-screen,
+  .orbit-panel,
+  .orbit-node,
+  .orbit-node-dot {
+    transition: none;
+  }
+
+  .orbit-panel {
+    transform: none;
+  }
+}
+
 /* ------------------------------------------------------------- Type scale
  *
  * Every size below is a number lifted from the app, not a web scale that

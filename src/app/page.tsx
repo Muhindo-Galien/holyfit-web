@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import type { ReactNode } from 'react';
 
-import { DeviceShot, DeviceVideo } from '@/components/device';
+import { DeviceVideo } from '@/components/device';
 import InstallButton from '@/components/install-button';
+import FeatureOrbit, { type OrbitFeature } from '@/components/feature-orbit';
 import OrbField from '@/components/orb-field';
 import Reveal from '@/components/reveal';
 import StructuredData, { homeGraph } from '@/components/structured-data';
@@ -25,51 +25,51 @@ import { site } from '@/config/site';
  * left empty.
  */
 
-/** One feature, told as a claim beside a picture of it. */
-type Feature = {
-  id: string;
-  eyebrow: string;
-  title: string;
-  body: string;
-  screen: ReactNode;
-};
-
-const features: Feature[] = [
+/**
+ * The four features, as data for `FeatureOrbit`.
+ *
+ * `screen` used to be a rendered `<DeviceShot>` per feature, because each one
+ * had a handset of its own. There is one handset now and the pictures are
+ * swapped inside it, so what the orbit needs is the image, not an element
+ * wrapping it. The colour is which of the app's `ORBS` each feature answers
+ * to, and it is what the wash behind the phone turns to.
+ */
+const features: OrbitFeature[] = [
   {
     id: 'routine',
     eyebrow: 'The routine',
     title: 'It starts with one answer',
     body: 'How many times a day do you want to sit down, and when? Up to two sittings each of reading, prayer and reflection, at hours you pick. Everything else in the app follows from that: what today looks like, what it reminds you of, what it counts.',
-    screen: (
-      <DeviceShot src="/visuals/routine.PNG" alt="Setting a routine in HolyFit: reading, prayer and reflection, each at an hour you choose." />
-    )
+    src: '/visuals/routine.PNG',
+    alt: 'Setting a routine in HolyFit: reading, prayer and reflection, each at an hour you choose.',
+    color: '#5b72ef'
   },
   {
     id: 'study',
     eyebrow: 'Study',
     title: 'Read, and keep what it left you',
     body: 'Build a plan from the passages you actually want to read (a book, a theme, a list someone gave you) and set the days it runs. One passage at a time, in your translation, ticked off when you have read it.',
-    screen: (
-      <DeviceShot src="/visuals/plan-passage.PNG" alt="A passage open in HolyFit, with the plan it belongs to above it." />
-    )
+    src: '/visuals/plan-passage.PNG',
+    alt: 'A passage open in HolyFit, with the plan it belongs to above it.',
+    color: '#7bd44b'
   },
   {
     id: 'pray',
     eyebrow: 'Pray',
     title: 'A list you keep, not a wall you perform on',
     body: 'Write down what you are carrying and come back to it. Nobody else can see it. There is no feed, no sharing, and no other reader anywhere in the app.',
-    screen: (
-      <DeviceShot src="/visuals/prayer-sreen.PNG" alt="The prayer list in HolyFit." />
-    )
+    src: '/visuals/prayer-sreen.PNG',
+    alt: 'The prayer list in HolyFit.',
+    color: '#e36fd2'
   },
   {
     id: 'reflect',
     eyebrow: 'Reflect',
     title: 'A few lines a day, where you can find them',
     body: 'One entry per day, private and searchable. The app works out your streak from the entries themselves rather than asking you to defend one.',
-    screen: (
-      <DeviceShot src="/visuals/refrelct-screen.PNG" alt="The reflection journal in HolyFit, one entry a day." />
-    )
+    src: '/visuals/refrelct-screen.PNG',
+    alt: 'The reflection journal in HolyFit, one entry a day.',
+    color: '#f0a05a'
   }
 ];
 
@@ -293,42 +293,8 @@ export default function HomePage() {
         </Reveal>
       </section>
 
-      {/* ---------------------------------------------------- Feature stories */}
-      {features.map((feature, index) => (
-        <section
-          key={feature.id}
-          id={feature.id}
-        >
-          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
-            <div
-              className={`flex flex-col items-center gap-14 lg:flex-row lg:gap-20 ${
-                // Alternated so the eye zig-zags down the page instead of
-                // running down one rail. Reversed only from `lg`, because
-                // stacked the picture belongs under the words either way.
-                index % 2 === 1 ? 'lg:flex-row-reverse' : ''
-              }`}
-            >
-              <Reveal className="flex-1">
-                <p className="eyebrow text-muted">{feature.eyebrow}</p>
-                <h2 className="section-title mt-4 text-balance">{feature.title}</h2>
-                <p className="lede mt-5 text-muted">{feature.body}</p>
-              </Reveal>
-
-              <Reveal delay={100} className="flex justify-center lg:flex-1">
-                {/* The orb wash pooled behind the handset, so it sits in light
-                    rather than on a flat panel. */}
-                <div className="relative">
-                  <div
-                    className="brand-wash absolute -inset-8 rounded-[60px] opacity-15 blur-3xl"
-                    aria-hidden="true"
-                  />
-                  <div className="relative">{feature.screen}</div>
-                </div>
-              </Reveal>
-            </div>
-          </div>
-        </section>
-      ))}
+      {/* ---------------------------------------------------------- Features */}
+      <FeatureOrbit features={features} />
 
       {/* ----------------------------------------------------------- Privacy */}
       <section id="privacy">
