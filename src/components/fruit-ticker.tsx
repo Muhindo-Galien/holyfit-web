@@ -45,14 +45,21 @@ const FRUIT = [
 
 export default function FruitTicker({ angle }: { angle: number }) {
   /*
-   * Typing is character-by-character motion in the reader's peripheral vision,
-   * which is squarely what the setting is for. Under `reduce` the phrase is
-   * printed once and left alone, and the library never mounts.
+   * Under `reduce` the list still runs; only the typing stops.
    *
-   * Starts false so the server and the first client render agree: the static
-   * phrase. Anything else is a hydration mismatch.
+   * This used to print the phrase once and leave it, which meant a reader with
+   * Reduce Motion switched on never saw a single fruit — nine of the ten
+   * strings were unreachable, and the component silently became a label. That
+   * was the wrong line to draw. The motion the setting objects to is the
+   * character-by-character rattle and the blinking caret, not the fact that a
+   * word changes; so `reduce` gets whole words swapped on a slow timer, and
+   * everything else stays.
+   *
+   * `animate` starts false so the server and the first client render agree on
+   * the static phrase. Anything else is a hydration mismatch.
    */
   const [animate, setAnimate] = useState(false);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -61,6 +68,14 @@ export default function FruitTicker({ angle }: { angle: number }) {
     query.addEventListener('change', sync);
     return () => query.removeEventListener('change', sync);
   }, []);
+
+  useEffect(() => {
+    if (animate) return;
+    // Slow enough to read and to not register as flicker. The typewriter path
+    // spends roughly this long per word too, so the two feel like one design.
+    const timer = setInterval(() => setIndex(i => (i + 1) % FRUIT.length), 2800);
+    return () => clearInterval(timer);
+  }, [animate]);
 
   return (
     <>
@@ -96,7 +111,7 @@ export default function FruitTicker({ angle }: { angle: number }) {
             }}
           />
         ) : (
-          <span className="hero-arch-ticker-text">{FRUIT[0]}</span>
+          <span className="hero-arch-ticker-text">{FRUIT[index]}</span>
         )}
       </span>
 
