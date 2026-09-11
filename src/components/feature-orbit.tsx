@@ -126,9 +126,20 @@ export default function FeatureOrbit({ features }: { features: OrbitFeature[] })
       ref={sectionRef}
       id="features"
       aria-labelledby="features-heading"
-      // Tall only once the orbit is live. Before that the stack needs no track
-      // to scrub, and a 340vh section of nothing would be a very long blank.
-      className={live ? 'relative h-[340vh]' : 'relative'}
+      className="relative"
+      /*
+       * The track grows with the list rather than being a fixed 340vh.
+       *
+       * A constant height meant every feature added shortened the stretch of
+       * scroll its own segment got: at seven, each was down to a third of a
+       * screen and they flicked past. 55vh apiece is brisk without being a
+       * flicker, and the 40 on top is the run-in before the first one and the
+       * run-out after the last.
+       *
+       * Only once live — before that the stack needs no track to scrub, and a
+       * section of nothing this tall would be a very long blank.
+       */
+      style={live ? { height: `${features.length * 55 + 40}vh` } : undefined}
     >
       <h2 id="features-heading" className="sr-only">
         What HolyFit does

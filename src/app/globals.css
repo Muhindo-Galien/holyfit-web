@@ -618,7 +618,7 @@ body {
      because a node's label runs horizontally: at three and nine o'clock its own
      width sticks out past the ring, and on a 390px viewport that put "Reflect"
      half off the screen. */
-  --rx: calc(var(--stage-w) / 2 - 2.8rem);
+  --rx: calc(var(--stage-w) / 2 - 2.2rem);
   --ry: calc(var(--stage-h) / 2 - 1.4rem);
 
   position: relative;
@@ -703,13 +703,13 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.4rem 0.75rem;
+  padding: 0.3rem 0.55rem;
   border-radius: 999px;
   white-space: nowrap;
   background: var(--surface);
   border: 1px solid var(--line);
   color: var(--text-secondary);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
   /* Polar placement: angle measured from twelve o'clock, clockwise. The
@@ -722,6 +722,15 @@ body {
     color 300ms ease,
     background-color 300ms ease,
     border-color 300ms ease;
+}
+
+/* Roomier once there is room. Seven nodes on a 390px screen is the tight case;
+   above it the labels can breathe. */
+@media (min-width: 640px) {
+  .orbit-node {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8125rem;
+  }
 }
 
 .orbit-node.is-active {

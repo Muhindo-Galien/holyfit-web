@@ -64,6 +64,33 @@ const features: OrbitFeature[] = [
     color: '#e36fd2'
   },
   {
+    id: 'today',
+    eyebrow: 'Today',
+    title: 'The day, worked out rather than stored',
+    body: 'Home shows what you have kept and what is next, derived from the routine you set rather than saved beside it. Open the app and the next sitting is already the first thing on the screen.',
+    src: '/visuals/home-with-hero.PNG',
+    alt: 'The HolyFit home screen: today’s plan, the hours of each sitting, and the prayers being carried.',
+    color: '#3fbf7f'
+  },
+  {
+    id: 'reminders',
+    eyebrow: 'Reminders',
+    title: 'It reminds you, quietly',
+    body: 'Each sitting gets a notice at the hour you picked, scheduled on your phone by your phone. No server is ever told when you pray, because there is no push token to tell it with.',
+    src: '/visuals/notifications.PNG',
+    alt: 'HolyFit notifications: a prayer to carry, and a finished reading plan.',
+    color: '#f2a0c0'
+  },
+  {
+    id: 'profile',
+    eyebrow: 'Profile',
+    title: 'Your translation, your hours, your account',
+    body: 'Pick the translation new plans are built in, change the routine whenever you like, and delete the account and everything in it from the same screen. Nothing is buried.',
+    src: '/visuals/profile.PNG',
+    alt: 'The HolyFit profile screen: account details, routine, and translation.',
+    color: '#e36fd2'
+  },
+  {
     id: 'reflect',
     eyebrow: 'Reflect',
     title: 'A few lines a day, where you can find them',
