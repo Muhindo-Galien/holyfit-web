@@ -177,7 +177,7 @@ export default function HomePage() {
                 below the same mark in the header, which said the name twice
                 before the page had said anything once. */}
             <h1 className="hero-title mx-auto max-w-3xl text-balance">
-              A daily rhythm of Bible study, reflection and prayer.
+              {site.tagline}
             </h1>
 
             <p className="lede mx-auto mt-7 max-w-xl text-pretty text-muted">
@@ -347,6 +347,8 @@ export default function HomePage() {
         </div>
       </section>
 
+
+  
       {/* --------------------------------------------------------------- FAQ */}
       <section className="border-t border-line/50">
         <div className="mx-auto max-w-3xl px-5 py-24 sm:px-8 sm:py-32">
