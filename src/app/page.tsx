@@ -89,37 +89,6 @@ const features: Feature[] = [
   }
 ];
 
-/**
- * The practice, somewhere other than a phone.
- *
- * Every other picture on this page is a screenshot, which sells the software
- * and says nothing about the thing the software is for. These are the only
- * images here of the actual practice.
- *
- * **No identifiable faces, and that is not an aesthetic preference.** Unsplash
- * grants a copyright licence; it does not grant model releases, and a
- * stranger's face on a page marketing a paid app is where that gap becomes a
- * problem. Hands, a silhouette, an empty room — all of which read as "this
- * could be you" rather than "look at this particular person", which is the
- * better picture anyway.
- *
- * Nothing here claims to be a user. The captions name places, not people,
- * because the page has no users to photograph yet and saying otherwise would
- * be the same lie as an invented testimonial.
- *
- * Unsplash License (free, commercial use, no permission required). Sources:
- *   table.jpg      unsplash.com/photos/b_SHPU5M3nk
- *   sunrise.jpg    unsplash.com/photos/lPCu8HnGU2E
- *   sanctuary.jpg  unsplash.com/photos/ry8c7ZWzu1s   Josh Applegate
- *   pages.jpg      unsplash.com/photos/TNlHf4m4gpI   Aaron Burden
- */
-const places = [
-  { src: '/people/table.jpg', caption: 'A kitchen table', alt: 'Two hands folded on an open Bible at a wooden table.' },
-  { src: '/people/sunrise.jpg', caption: 'Outside, before sunrise', alt: 'A person kneeling in silhouette against a misty sunrise.' },
-  { src: '/people/sanctuary.jpg', caption: 'A building built for it', alt: 'Empty wooden pews with morning light falling across the floor.' },
-  { src: '/people/pages.jpg', caption: 'Ten minutes, anywhere', alt: 'An open Bible with its pages lit by low warm light.' }
-];
-
 const steps = [
   {
     title: 'Set your routine, once',
@@ -260,6 +229,83 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ------------------------------------------------------------- Practice */}
+      {/*
+        * The one photograph on the page, full-bleed and early.
+        *
+        * This began as four thumbnails in a contained grid further down, which
+        * was the wrong shape for the job: a grid of small pictures under four
+        * sections of screenshots reads as a gallery, and a gallery is
+        * decoration. The sites this is measured against — Glorify most directly
+        * — each commit a whole screen to one image and let it carry the
+        * feeling. Bigger and earlier beats more.
+        *
+        * Composition chosen for the layout, not just the subject: the figure
+        * sits right, the mist and low sun fill the left, so overlaid copy lands
+        * on the quiet half of the frame instead of fighting the subject.
+        *
+        * Still no identifiable face. A silhouette needs no model release, and
+        * it lets the reader be the person in it, which a portrait does not.
+        *
+        * Unsplash License. unsplash.com/photos/lPCu8HnGU2E
+        */}
+      <section className="relative h-[440px] overflow-hidden sm:h-[560px] lg:h-[640px]">
+        <Image
+          src="/people/sunrise-wide.jpg"
+          alt="A person kneeling in silhouette beside still water, in mist, against a low sun."
+          fill
+          sizes="100vw"
+          className="object-cover"
+          // The sun blows out at low quality and bands across the mist.
+          quality={95}
+        />
+
+        {/*
+          * The scrim changes direction with the viewport, and it has to.
+          *
+          * A left-to-right scrim is right on a wide screen: the copy occupies
+          * the left half and the figure the right, so darkening one side buys
+          * contrast without burying the subject. Narrow, that same gradient
+          * fails — the crop puts the bright mist directly behind the text, and
+          * the first attempt had body copy sitting on the brightest pixels in
+          * the frame at roughly 2:1.
+          *
+          * So: vertical below `sm`, where the copy stacks at the top, and
+          * horizontal above it. One scrim each, never both.
+          *
+          * The values are measured, not judged by eye — by hiding the copy,
+          * photographing what sits behind it and taking the worst pixel in the
+          * box. The eye was wrong twice: the first pass put body copy at
+          * 2.93:1 on desktop and 3.65:1 on mobile, both failing AA, and desktop
+          * looked the safer of the two while being the worse. If the image or
+          * the copy length changes, measure again rather than trusting it.
+          */}
+        <div
+          className="absolute inset-0 sm:hidden"
+          style={{ background: 'linear-gradient(180deg, rgba(8,10,20,0.92) 0%, rgba(8,10,20,0.86) 50%, rgba(8,10,20,0.45) 100%)' }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 hidden sm:block"
+          style={{ background: 'linear-gradient(90deg, rgba(8,10,20,0.92) 0%, rgba(8,10,20,0.82) 55%, rgba(8,10,20,0.30) 82%, rgba(8,10,20,0) 100%)' }}
+          aria-hidden="true"
+        />
+
+        <div className="relative mx-auto flex h-full max-w-6xl items-center px-5 sm:px-8">
+          <Reveal className="max-w-xl">
+            {/* White regardless of theme: it sits on a photograph, not on the
+                page, so it must not follow the palette underneath it. */}
+            <p className="eyebrow text-white/70">The practice</p>
+            <h2 className="section-title mt-4 text-balance text-white">It does not look the same for anyone</h2>
+            <p className="lede mt-5 text-pretty text-white/90">
+              A sitting is a sitting whether it happens at a kitchen table before the house is up, on a train, or in a
+              building built for it. {site.name} has no opinion about where you are. It keeps the hours you set and
+              leaves the rest to you.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
       {/* -------------------------------------------------------- What it is */}
       <section className="mx-auto max-w-3xl px-5 py-24 sm:px-8 sm:py-32">
         <Reveal>
@@ -330,46 +376,6 @@ export default function HomePage() {
           </div>
         </section>
       ))}
-
-      {/* ------------------------------------------------------------- Places */}
-      {/* Placed directly after four sections of handset screenshots, where the
-          change from product to practice does the most work. */}
-      <section className="border-y border-line/50 bg-surface">
-        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
-          <Reveal>
-            <p className="eyebrow text-muted">The practice</p>
-            <h2 className="section-title mt-4 max-w-2xl text-balance">It does not look the same for anyone</h2>
-            <p className="lede mt-5 max-w-2xl text-muted">
-              A sitting is a sitting whether it happens at a kitchen table before the house is up, on a train, or in a
-              building built for it. {site.name} has no opinion about where you are. It keeps the hours you set and
-              leaves the rest to you.
-            </p>
-          </Reveal>
-
-          <ul className="mt-12 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
-            {places.map((place, index) => (
-              <Reveal key={place.src} delay={index * 70}>
-                <li>
-                  {/* 4:5, fixed by the wrapper rather than by the file, so a
-                      replacement image of any size drops in without relayout. */}
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-elevated">
-                    <Image
-                      src={place.src}
-                      alt={place.alt}
-                      fill
-                      // Two up on a phone, four on a wide screen, and never
-                      // wider than the 288px column the grid tops out at.
-                      sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 288px"
-                      className="object-cover"
-                    />
-                  </div>
-                  <p className="mt-3 text-sm text-muted">{place.caption}</p>
-                </li>
-              </Reveal>
-            ))}
-          </ul>
-        </div>
-      </section>
 
       {/* ------------------------------------------------------- How it works */}
       <section id="how" className="mx-auto max-w-4xl px-5 py-24 sm:px-8 sm:py-32">
