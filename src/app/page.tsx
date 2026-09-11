@@ -213,61 +213,64 @@ export default function HomePage() {
         *
         * Unsplash License. unsplash.com/photos/lPCu8HnGU2E
         */}
-      <section className="relative h-[440px] overflow-hidden sm:h-[560px] lg:h-[640px]">
-        <Image
-          src="/people/sunrise-wide.jpg"
-          alt="A person kneeling in silhouette beside still water, in mist, against a low sun."
-          fill
-          sizes="100vw"
-          className="object-cover"
-          // The sun blows out at low quality and bands across the mist.
-          quality={95}
-        />
+      <section className="mx-auto max-w-5xl px-5 py-20 sm:px-8 sm:py-28">
+        <Reveal>
+          {/* Same shell as the final ask: `max-w-5xl`, the 2.5rem radius and a
+              hairline border. It was full-bleed, which made it the loudest
+              thing on the page and put it in a different family from every
+              other block. Inside a card it reads as part of the page. */}
+          <div className="relative h-[420px] overflow-hidden rounded-[2.5rem] border border-line sm:h-[480px] lg:h-[540px]">
+            <Image
+              src="/people/sunrise-wide.jpg"
+              alt="A person kneeling in silhouette beside still water, in mist, against a low sun."
+              fill
+              // Capped by the card, not the viewport: `max-w-5xl` less the
+              // gutters is 960px at the widest it ever draws.
+              sizes="(max-width: 1024px) 100vw, 960px"
+              className="object-cover"
+              // The sun blows out at low quality and bands across the mist.
+              quality={95}
+            />
 
-        {/*
-          * The scrim changes direction with the viewport, and it has to.
-          *
-          * A left-to-right scrim is right on a wide screen: the copy occupies
-          * the left half and the figure the right, so darkening one side buys
-          * contrast without burying the subject. Narrow, that same gradient
-          * fails — the crop puts the bright mist directly behind the text, and
-          * the first attempt had body copy sitting on the brightest pixels in
-          * the frame at roughly 2:1.
-          *
-          * So: vertical below `sm`, where the copy stacks at the top, and
-          * horizontal above it. One scrim each, never both.
-          *
-          * The values are measured, not judged by eye — by hiding the copy,
-          * photographing what sits behind it and taking the worst pixel in the
-          * box. The eye was wrong twice: the first pass put body copy at
-          * 2.93:1 on desktop and 3.65:1 on mobile, both failing AA, and desktop
-          * looked the safer of the two while being the worse. If the image or
-          * the copy length changes, measure again rather than trusting it.
-          */}
-        <div
-          className="absolute inset-0 sm:hidden"
-          style={{ background: 'linear-gradient(180deg, rgba(8,10,20,0.92) 0%, rgba(8,10,20,0.86) 50%, rgba(8,10,20,0.45) 100%)' }}
-          aria-hidden="true"
-        />
-        <div
-          className="absolute inset-0 hidden sm:block"
-          style={{ background: 'linear-gradient(90deg, rgba(8,10,20,0.92) 0%, rgba(8,10,20,0.82) 55%, rgba(8,10,20,0.30) 82%, rgba(8,10,20,0) 100%)' }}
-          aria-hidden="true"
-        />
+            {/*
+              * The scrim changes direction with the viewport, and it has to.
+              *
+              * A left-to-right scrim is right on a wide card: the copy occupies
+              * the left and the figure the right, so darkening one side buys
+              * contrast without burying the subject. Narrow, that same gradient
+              * fails — the crop puts the bright mist directly behind the text.
+              *
+              * The values are measured, not judged by eye — by hiding the copy,
+              * photographing what sits behind it and taking the worst pixel in
+              * the box. The eye was wrong twice before: an earlier pass ran body
+              * copy at 2.93:1 and looked fine. Narrowing this from full-bleed to
+              * a card re-crops the image, so the numbers were taken again.
+              */}
+            <div
+              className="absolute inset-0 sm:hidden"
+              style={{ background: 'linear-gradient(180deg, rgba(8,10,20,0.92) 0%, rgba(8,10,20,0.86) 50%, rgba(8,10,20,0.45) 100%)' }}
+              aria-hidden="true"
+            />
+            <div
+              className="absolute inset-0 hidden sm:block"
+              style={{ background: 'linear-gradient(90deg, rgba(8,10,20,0.92) 0%, rgba(8,10,20,0.82) 55%, rgba(8,10,20,0.30) 82%, rgba(8,10,20,0) 100%)' }}
+              aria-hidden="true"
+            />
 
-        <div className="relative mx-auto flex h-full max-w-6xl items-center px-5 sm:px-8">
-          <Reveal className="max-w-xl">
-            {/* White regardless of theme: it sits on a photograph, not on the
-                page, so it must not follow the palette underneath it. */}
-            <p className="eyebrow text-white/70">The practice</p>
-            <h2 className="section-title mt-4 text-balance text-white">It does not look the same for anyone</h2>
-            <p className="lede mt-5 text-pretty text-white/90">
-              A sitting is a sitting whether it happens at a kitchen table before the house is up, on a train, or in a
-              building built for it. {site.name} has no opinion about where you are. It keeps the hours you set and
-              leaves the rest to you.
-            </p>
-          </Reveal>
-        </div>
+            <div className="relative flex h-full items-center px-8 sm:px-12">
+              <div className="max-w-lg">
+                {/* White regardless of theme: it sits on a photograph, not on
+                    the page, so it must not follow the palette underneath. */}
+                <p className="eyebrow text-white/70">The practice</p>
+                <h2 className="section-title mt-4 text-balance text-white">It does not look the same for anyone</h2>
+                <p className="lede mt-5 text-pretty text-white/90">
+                  A sitting is a sitting whether it happens at a kitchen table before the house is up, on a train, or in
+                  a building built for it. {site.name} has no opinion about where you are.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </section>
 
       {/* -------------------------------------------------------- What it is */}
