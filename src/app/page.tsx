@@ -178,8 +178,10 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Everything below the hero shares one ground. See `.on-dark`. */}
+      <div className="on-dark">
       {/* -------------------------------------------------------- Trust strip */}
-      <section className="border-y border-line/50 bg-surface">
+      <section className="border-y border-line/50">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-5 py-6 text-center text-sm font-semibold text-muted sm:px-8">
           <span>No advertising</span>
           <span aria-hidden="true" className="opacity-30">·</span>
@@ -291,7 +293,6 @@ export default function HomePage() {
         <section
           key={feature.id}
           id={feature.id}
-          className={index % 2 === 1 ? 'bg-surface' : ''}
         >
           <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
             <div
@@ -325,7 +326,7 @@ export default function HomePage() {
       ))}
 
       {/* ----------------------------------------------------------- Privacy */}
-      <section id="privacy" className="bg-surface">
+      <section id="privacy">
         <div className="mx-auto max-w-5xl px-5 py-24 sm:px-8 sm:py-32">
           <Reveal>
             <h2 className="section-title max-w-2xl text-balance">What we don’t do</h2>
@@ -395,6 +396,7 @@ export default function HomePage() {
           </div>
         </Reveal>
       </section>
+      </div>
     </>
   );
 }

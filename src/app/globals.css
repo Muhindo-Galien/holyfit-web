@@ -64,6 +64,50 @@
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
+/* ------------------------------------------------------------- Dark below
+ *
+ * Everything after the hero runs on the app's dark ground, in both themes.
+ *
+ * The page used to alternate — a plain section, then a `--surface` one, then
+ * plain again — which is the oldest trick for separating bands of content and
+ * reads as one. It also had a worse problem in light mode: every capture in
+ * `public/visuals` is a dark-mode screenshot, so a white page put black
+ * handsets on white ground and each one looked like a hole. On black they sit
+ * on the colour the app actually is.
+ *
+ * This works by redefining the palette variables on a subtree rather than by
+ * restyling anything. `@theme inline` makes Tailwind's `--color-*` resolve
+ * `var(--background)` at the point of use, so every `bg-background`,
+ * `text-muted` and `border-line` inside this container picks up the values
+ * below without a single utility changing. The hero keeps the theme.
+ *
+ * Values are `Colors.dark` from the app, same as the dark-mode block above.
+ */
+.on-dark {
+  --background: #000000;
+  --surface: #212225;
+  --elevated: #2e3135;
+  --line: #2e3135;
+  --text: #ffffff;
+  --text-secondary: #b0b4ba;
+  --brand-surface: #121019;
+  /* The lifted accent, for the same reason dark mode needs it: #5b72ef on
+     black is 4.0:1 and fails AA for the links in the legal copy. */
+  --accent: #8b9bf5;
+  --danger: #f2685e;
+
+  background-color: var(--background);
+  color: var(--text);
+}
+
+/* `.device-screen` sets `--app-bg` on itself, so redefining it on the ancestor
+   is not enough — it has to be restated here. Without this the handset backs a
+   still-loading screenshot with white, inside a black frame, on a black page:
+   exactly the flash the token exists to prevent. */
+.on-dark .device-screen {
+  --app-bg: #000000;
+}
+
 /*
  * The get-started orb field, flattened to a left-to-right wash — the same five
  * stops, in the same order, as `AmbientGradient` in the app.

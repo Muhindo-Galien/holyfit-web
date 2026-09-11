@@ -37,8 +37,18 @@ export default function SiteHeader() {
 
   return (
     <header
+      /*
+       * `on-dark` only once scrolled, and that is the whole trick.
+       *
+       * At rest the header floats in the hero, which still follows the
+       * reader's theme, so it must too. The moment it detaches it is over the
+       * dark run that starts below the hero, and a white bar backed by
+       * `bg-background/80` would be a light slab sitting on black. Adopting the
+       * dark palette at the same instant the background appears means the two
+       * always agree.
+       */
       className={`sticky top-0 z-40 transition-colors duration-300 ${
-        scrolled ? 'border-b border-line/50 bg-background/80 backdrop-blur-xl' : 'border-b border-transparent'
+        scrolled ? 'on-dark border-b border-line/50 bg-background/80 backdrop-blur-xl' : 'border-b border-transparent'
       }`}
     >
       <div className="mx-auto flex h-[4.25rem] max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
