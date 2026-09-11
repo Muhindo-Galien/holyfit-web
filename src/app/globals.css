@@ -142,67 +142,129 @@
  * a `radial-gradient` cannot carry one and stacked layers each need their own.
  */
 .orb-field {
-  /* `AmbientOrbs`' `intensity`, and set to the value the app itself uses
-     wherever body copy sits on the field. The app runs the orbs at full
-     strength only on get-started, whose entire content is a 52px wordmark and
-     one line of tagline; `auth-screen` — a form, with real text on it — dials
-     them to 0.3, and the reason is recorded in the prop's own comment: at 1.0
-     secondary text over the indigo orb measures 2.7:1 and fails AA.
+  /* `AmbientOrbs`' `intensity`, set to the value the app itself uses wherever
+     body copy sits on the field. The app runs the orbs at full strength only on
+     get-started, whose entire content is a 52px wordmark and one line of
+     tagline; `auth-screen` — a form, with real text on it — dials them to 0.3,
+     and the reason is in the prop's own comment: at 1.0, secondary text over
+     the indigo orb measures 2.7:1 and fails AA.
 
-     Both places this field appears on the site carry body copy, so both take
-     the auth-screen value. Measured, not assumed — and the model was checked
-     against the app's own figure first: `--text-secondary` over the indigo orb
-     at full strength comes out at 2.69:1 here, which is the 2.7:1 the app
-     recorded. That same pairing is the worst on this page, and 0.3 lifts it to
-     4.78:1. Lime, the strongest orb, goes 3.51:1 → 5.08:1. Dark mode is easier
-     throughout: the orbs lighten a black ground rather than darken a white one,
-     and the worst case there is lime at 6.31:1. */
+     Both places this field appears carry body copy, so both take the
+     auth-screen value. Measured, not assumed — the model was checked against
+     the app's own figure first: `--text-secondary` over the indigo orb at full
+     strength comes out at 2.69:1 here, which is the 2.7:1 the app recorded.
+     0.3 lifts that worst case to 4.78:1; lime, the strongest orb, goes 3.51:1
+     to 5.08:1, and dark mode's worst is 6.31:1.
+
+     The orbs drift now, and none of those numbers move with them: drift changes
+     where a core sits by a few per cent and changes neither its colour nor its
+     opacity, so the worst pixel on the field is the same pixel a moment later. */
   --orb-intensity: 0.3;
 
+  position: relative;
+  isolation: isolate;
   background-color: var(--background);
-  background-image:
-    /* lime — x 0.5, y 0.22, size 0.42, opacity 0.85 */
-    radial-gradient(
-      42.0% 42.0% at 50.0% 22.0%,
-      color-mix(in oklab, #7bd44b calc(85% * var(--orb-intensity)), transparent) 0%,
-      color-mix(in oklab, #7bd44b calc(38% * var(--orb-intensity)), transparent) 55%,
-      transparent 100%
-    ),
-    /* amber — x 0.86, y 0.44, size 0.3, opacity 0.7 */
-    radial-gradient(
-      30.0% 30.0% at 86.0% 44.0%,
-      color-mix(in oklab, #f0a05a calc(70% * var(--orb-intensity)), transparent) 0%,
-      color-mix(in oklab, #f0a05a calc(31% * var(--orb-intensity)), transparent) 55%,
-      transparent 100%
-    ),
-    /* magenta — x 0.24, y 0.56, size 0.26, opacity 0.7 */
-    radial-gradient(
-      26.0% 26.0% at 24.0% 56.0%,
-      color-mix(in oklab, #e36fd2 calc(70% * var(--orb-intensity)), transparent) 0%,
-      color-mix(in oklab, #e36fd2 calc(31% * var(--orb-intensity)), transparent) 55%,
-      transparent 100%
-    ),
-    /* indigo — x 0.12, y 0.73, size 0.28, opacity 0.6 */
-    radial-gradient(
-      28.0% 28.0% at 12.0% 73.0%,
-      color-mix(in oklab, #5b72ef calc(60% * var(--orb-intensity)), transparent) 0%,
-      color-mix(in oklab, #5b72ef calc(27% * var(--orb-intensity)), transparent) 55%,
-      transparent 100%
-    ),
-    /* jade — x 0.74, y 0.8, size 0.3, opacity 0.6 */
-    radial-gradient(
-      30.0% 30.0% at 74.0% 80.0%,
-      color-mix(in oklab, #3fbf7f calc(60% * var(--orb-intensity)), transparent) 0%,
-      color-mix(in oklab, #3fbf7f calc(27% * var(--orb-intensity)), transparent) 55%,
-      transparent 100%
-    ),
-    /* blush — x 0.9, y 0.09, size 0.22, opacity 0.55 */
-    radial-gradient(
-      22.0% 22.0% at 90.0% 9.0%,
-      color-mix(in oklab, #f2a0c0 calc(55% * var(--orb-intensity)), transparent) 0%,
-      color-mix(in oklab, #f2a0c0 calc(25% * var(--orb-intensity)), transparent) 55%,
-      transparent 100%
-    );
+}
+
+/* The orbs sit behind everything in the field. Content inside `.orb-field`
+   needs no z-index of its own: `isolation: isolate` on the parent plus a
+   negative index here puts the layer behind its siblings without escaping the
+   stacking context and sliding under the page itself. */
+.orb-layer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  /* Inherits whatever rounding it fills, so the field does not spill past the
+     final ask's 2.5rem corners. */
+  border-radius: inherit;
+}
+
+.orb {
+  position: absolute;
+  /* Positioned by its own edges rather than centred with a transform, because
+     `transform` belongs to the animation and the two would fight. `left` and
+     `width` are both percentages of width, `top` and `height` both of height,
+     so this lands the centre exactly on (--orb-x, --orb-y). */
+  left: calc(var(--orb-x) - var(--orb-size));
+  top: calc(var(--orb-y) - var(--orb-size));
+  width: calc(var(--orb-size) * 2);
+  height: calc(var(--orb-size) * 2);
+
+  /* The app's three-stop falloff: full, 45% at the midpoint, nothing at the
+     rim. The mid stop pulls the falloff outward so the core stays saturated
+     instead of washing out from the centre. */
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--orb-color) calc(var(--orb-opacity) * var(--orb-intensity) * 100%), transparent) 0%,
+    color-mix(in oklab, var(--orb-color) calc(var(--orb-opacity) * 0.45 * var(--orb-intensity) * 100%), transparent) 55%,
+    transparent 100%
+  );
+
+  animation-name: orb-drift-a;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.orb--drift-b {
+  animation-name: orb-drift-b;
+}
+
+.orb--drift-c {
+  animation-name: orb-drift-c;
+}
+
+/* Percentages are of the orb's own box, which is already most of the field, so
+   single digits read as a slow bloom rather than a slide. */
+@keyframes orb-drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(4%, -5%, 0) scale(1.08);
+  }
+  66% {
+    transform: translate3d(-3%, 4%, 0) scale(0.95);
+  }
+}
+
+@keyframes orb-drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  40% {
+    transform: translate3d(-5%, 3%, 0) scale(0.94);
+  }
+  70% {
+    transform: translate3d(3%, 5%, 0) scale(1.07);
+  }
+}
+
+@keyframes orb-drift-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  30% {
+    transform: translate3d(5%, 4%, 0) scale(1.05);
+  }
+  65% {
+    transform: translate3d(-4%, -4%, 0) scale(0.96);
+  }
+}
+
+/* Someone who asked their system for less motion gets the finished frame. The
+   field is the brand; the drift is decoration, and decoration is exactly what
+   that setting exists to stop. */
+@media (prefers-reduced-motion: reduce) {
+  .orb {
+    animation: none;
+    will-change: auto;
+  }
 }
 
 html {

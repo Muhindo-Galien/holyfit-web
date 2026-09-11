@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 
 import { DeviceShot, DeviceVideo } from '@/components/device';
 import InstallButton from '@/components/install-button';
+import OrbField from '@/components/orb-field';
 import Reveal from '@/components/reveal';
 import StructuredData, { homeGraph } from '@/components/structured-data';
 import { site } from '@/config/site';
@@ -134,6 +135,7 @@ export default function HomePage() {
         * is the header's height; the two must be changed together.
         */}
       <section className="orb-field relative -mt-[4.25rem] pt-[4.25rem]">
+        <OrbField />
         <div className="mx-auto max-w-5xl px-5 pb-24 pt-20 text-center sm:px-8 sm:pb-32 sm:pt-28">
           <Reveal>
             {/* No app icon above the headline. It sat a few hundred pixels
@@ -389,6 +391,7 @@ export default function HomePage() {
       <section className="mx-auto max-w-5xl px-5 sm:px-8">
         <Reveal>
           <div className="orb-field overflow-hidden rounded-[2.5rem] border border-line px-8 py-20 text-center">
+            <OrbField />
             <h2 className="section-title mx-auto max-w-lg text-balance">Start with one sitting a day.</h2>
             <p className="lede mx-auto mt-5 max-w-md text-muted">
               Change the routine whenever you like. Nothing is lost when you do.
