@@ -39,16 +39,16 @@ import { site } from '@/config/site';
  * What the arch over the handset carries: the four sittings, styled as the
  * orbit's nodes are so the two compositions read as one family.
  *
- * Angles are degrees from twelve o'clock, positive clockwise. The inner pair
- * sits above the phone's top edge and the outer pair clear of its sides —
- * there is no room between those two bands, because that is exactly where the
- * handset is.
+ * Angles are degrees from twelve o'clock, positive clockwise. Routine and
+ * Reflect sit at the springing points, where the arc meets the handset; Study
+ * and Pray take the seats those two used to hold. The apex is left empty for
+ * the ticker, which is the only stretch of the arc with nothing either side.
  */
 const archFeatures = [
-  { label: 'Routine', angle: -68, color: '#5b72ef' },
-  { label: 'Study', angle: -25, color: '#7bd44b' },
-  { label: 'Pray', angle: 25, color: '#e36fd2' },
-  { label: 'Reflect', angle: 68, color: '#f0a05a' }
+  { label: 'Routine', angle: -90, color: '#5b72ef' },
+  { label: 'Study', angle: -68, color: '#7bd44b' },
+  { label: 'Pray', angle: 68, color: '#e36fd2' },
+  { label: 'Reflect', angle: 90, color: '#f0a05a' }
 ];
 
 const features: OrbitFeature[] = [
@@ -198,8 +198,6 @@ export default function HomePage() {
               <InstallButton />
               {site.installUrl ? <p className="max-w-sm text-sm text-muted">{site.installNote}</p> : null}
             </div>
-
-            <FruitTicker />
           </Reveal>
 
           {/* The app running, immediately — before the visitor has to read
@@ -214,6 +212,7 @@ export default function HomePage() {
               {/* The arch, and the handset hung inside it. */}
               <div className="hero-arch" aria-hidden="true">
                 <div className="hero-arch-line" />
+                <FruitTicker angle={0} />
                 {archFeatures.map(item => (
                   <span
                     key={item.label}

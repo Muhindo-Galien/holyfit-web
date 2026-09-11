@@ -457,7 +457,7 @@ body {
    * a 260px phone plus a pill either side is wider than the viewport. Dropping
    * the phone further below the apex opens a band above it where all four fit.
    */
-  --arch-gap: 5rem;
+  --arch-gap: 7rem;
   /*
    * How far down the curve the outer labels sit, as a fraction of their stated
    * angle.
@@ -468,8 +468,18 @@ body {
    * them above the phone's top edge instead of beside it, which is the only
    * place they fit. The deeper `--arch-gap` here is the other half of that:
    * it lowers the handset to make the room they move into.
+   *
+   * 0.63, not 1, because the labels moved outward: Routine and Reflect sit at
+   * the springing points. A 390px screen cannot hold a pill beside a
+   * 260px handset at all — clearing the phone needs it past the viewport edge,
+   * and staying on screen puts it on the phone. There is no angle that does
+   * both, so on narrow screens all four move above the phone instead.
+   *
+   * The gap and the spread are one setting in two halves. A deeper gap drops
+   * the handset, which opens the band above it, which is what lets the spread
+   * widen far enough to keep the two left labels from touching each other.
    */
-  --arch-spread: 0.72;
+  --arch-spread: 0.63;
 
   display: flex;
   flex-direction: column;
@@ -479,7 +489,7 @@ body {
 @media (min-width: 640px) {
   .hero-stage {
     --arch-r: 15rem;
-    --arch-gap: 2.5rem;
+    --arch-gap: 3.5rem;
     --arch-spread: 1;
   }
 }
@@ -487,7 +497,7 @@ body {
 @media (min-width: 1024px) {
   .hero-stage {
     --arch-r: 15.5rem;
-    --arch-gap: 2.75rem;
+    --arch-gap: 4rem;
   }
 }
 
@@ -558,43 +568,31 @@ body {
   }
 }
 
-/* ------------------------------------------------------------ Fruit ticker
- *
- * One line between the install button and the arch, which was the emptiest
- * band left in the hero.
- */
-.hero-fruit {
-  margin-top: 2.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.hero-fruit-label {
-  color: var(--text-secondary);
-  opacity: 0.7;
-}
-
 /*
- * A fixed slot, left-aligned.
+ * The ticker at the apex.
  *
- * The word changes on every frame while typing. Centred in an auto-width box it
- * would grow from the middle outwards and drag the label beside it left and
- * right; left-aligned in a fixed slot, the letters arrive and the line either
- * side of them stays put. Wide enough for "Self-control", the longest of the
- * nine.
+ * A fixed slot, because the text changes on every frame while typing and a pill
+ * that resized with it would breathe in and out at the top of the arch. Wide
+ * enough for "Fruit of the Spirit", which is the longest string in the loop —
+ * everything else is a single word and sits comfortably inside it.
+ *
+ * Left-aligned rather than centred: centred, the letters would grow outwards
+ * from the middle and the caret would drift left as the word got longer.
  */
-.hero-fruit-word {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.15em;
-  width: 7.5rem;
+.hero-arch-ticker {
+  width: 10rem;
+  justify-content: flex-start;
   color: var(--text);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.625rem;
+}
+
+@media (min-width: 640px) {
+  .hero-arch-ticker {
+    width: 12.5rem;
+    font-size: 0.75rem;
+  }
 }
 
 .hero-fruit-caret {

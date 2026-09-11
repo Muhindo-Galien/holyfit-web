@@ -20,7 +20,9 @@ import { useEffect, useState } from 'react';
  * and a three-letter one do not shift the line around them as they swap.
  */
 
+/** The anchor, then the list. Index 0 is what the loop returns to. */
 const FRUIT = [
+  'Fruit of the Spirit',
   'Love',
   'Joy',
   'Peace',
@@ -32,10 +34,12 @@ const FRUIT = [
   'Self-control'
 ] as const;
 
-const TYPE_MS = 70;
-const DELETE_MS = 40;
-const HOLD_MS = 1600;
-const BETWEEN_MS = 250;
+/* About a second a word, which is what was asked for: long enough to read a
+   short one, short enough that "Faithfulness" does not outstay it. */
+const TYPE_MS = 45;
+const DELETE_MS = 25;
+const HOLD_MS = 1000;
+const BETWEEN_MS = 160;
 
 function useTypewriter(startIndex: number, startDelay: number, enabled: boolean) {
   // Explicitly `string`: `FRUIT` is `as const`, so inference would narrow this
@@ -85,7 +89,7 @@ function useTypewriter(startIndex: number, startDelay: number, enabled: boolean)
   return word;
 }
 
-export default function FruitTicker() {
+export default function FruitTicker({ angle }: { angle: number }) {
   /*
    * Typing is character-by-character motion in the reader's peripheral vision,
    * which is squarely what the setting is for. Under `reduce` the two words are
@@ -101,14 +105,15 @@ export default function FruitTicker() {
     return () => query.removeEventListener('change', sync);
   }, []);
 
-  const word = useTypewriter(0, 400, animate);
+  const word = useTypewriter(0, 500, animate);
 
   return (
-    <p className="hero-fruit">
-      <span className="hero-fruit-label" aria-hidden="true">
-        Fruit of the Spirit
-      </span>
-      <span className="hero-fruit-word" aria-hidden="true">
+    <>
+      <span
+        className="hero-arch-label hero-arch-ticker"
+        style={{ '--label-angle': `${angle}deg` } as React.CSSProperties}
+        aria-hidden="true"
+      >
         {word}
         <span className="hero-fruit-caret" />
       </span>
@@ -118,7 +123,7 @@ export default function FruitTicker() {
        * reader gets the nine in one breath instead of a stream of half-typed
        * fragments, and it is what sits in the HTML for a crawler.
        */}
-      <span className="sr-only">The fruit of the Spirit: {FRUIT.join(', ')}. Galatians 5:22–23.</span>
-    </p>
+      <span className="sr-only">The fruit of the Spirit: {FRUIT.slice(1).join(', ')}. Galatians 5:22–23.</span>
+    </>
   );
 }
