@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { DeviceVideo } from '@/components/device';
+import { DeviceShot, DeviceVideo } from '@/components/device';
 import InstallButton from '@/components/install-button';
 import FruitTicker from '@/components/fruit-ticker';
 import FeatureOrbit, { type OrbitFeature } from '@/components/feature-orbit';
@@ -118,6 +118,15 @@ const features: OrbitFeature[] = [
     src: '/visuals/profile.PNG',
     alt: 'The holyfit profile screen: account details, routine, and translation.',
     color: '#e36fd2'
+  },
+  {
+    id: 'fruit',
+    eyebrow: 'The fruit',
+    title: 'One fruit, for a stretch of days',
+    body: 'Take up kindness or self-control and the app asks you one question a day — “where did you stop yourself?” — with somewhere to put the answer. It sits beside the journal, because that is the same sitting.',
+    src: '/visuals/fruit-walk.PNG',
+    alt: 'Taking up self-control in holyfit: day 1 of 40, today’s question, and a moment noticed.',
+    color: '#3fbf7f'
   },
   {
     id: 'reflect',
@@ -394,35 +403,54 @@ export default function HomePage() {
           <div className="relative overflow-hidden rounded-[2.5rem] border border-line px-6 py-14 sm:px-12 sm:py-20">
             <div className="brand-wash absolute inset-0 opacity-[0.07]" aria-hidden="true" />
 
-            <div className="relative mx-auto max-w-2xl text-center">
-              <p className="eyebrow text-muted">The fruit</p>
+            <div className="relative grid items-center gap-12 lg:grid-cols-[1fr_auto] lg:gap-16">
+              <div className="text-center lg:text-left">
+                <p className="eyebrow text-muted">The fruit</p>
 
-              {/* The app's own daily question, verbatim. */}
-              <h2 className="section-title mt-5 text-balance">Who did you find hardest to be kind to today?</h2>
+                {/* The app's own daily question, verbatim. */}
+                <h2 className="section-title mt-5 text-balance">Who did you find hardest to be kind to today?</h2>
 
-              <p className="lede mt-6 text-pretty text-muted">
-                Take up one fruit of the Spirit for a stretch of days you choose. {site.name} asks you a question a day
-                and gives you somewhere to put the answer. It sits in Reflect, beside the journal, because that is the
-                same sitting.
-              </p>
+                <p className="lede mt-6 text-pretty text-muted">
+                  Take up one fruit of the Spirit for a stretch of days you choose. {site.name} asks you a question a
+                  day and gives you somewhere to put the answer. It sits in Reflect, beside the journal, because that is
+                  the same sitting.
+                </p>
 
-              <ul className="mt-8 flex flex-wrap justify-center gap-2.5">
-                {fruitsOnOffer.map(fruit => (
-                  <li
-                    key={fruit.label}
-                    className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-semibold text-ink"
-                  >
-                    <span className="size-2 rounded-full" style={{ background: fruit.color }} aria-hidden="true" />
-                    {fruit.label}
-                  </li>
-                ))}
-              </ul>
+                <ul className="mt-8 flex flex-wrap justify-center gap-2.5 lg:justify-start">
+                  {fruitsOnOffer.map(fruit => (
+                    <li
+                      key={fruit.label}
+                      className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-semibold text-ink"
+                    >
+                      <span className="size-2 rounded-full" style={{ background: fruit.color }} aria-hidden="true" />
+                      {fruit.label}
+                    </li>
+                  ))}
+                </ul>
 
-              <p className="body-copy mx-auto mt-8 max-w-xl text-pretty text-muted">
-                <strong className="text-ink">One at a time.</strong> Working on both at once is working on neither, so
-                the app will not let you. And nothing here is scored: a day is kept or it slipped, and there is no
-                streak, no percentage and no tally anywhere in it. “Day 12 of 40” is a fact about the calendar.
-              </p>
+                {/*
+                  * "No tally" was here and had to go the moment the screenshot
+                  * did: the look-back screen counts moments noticed and days
+                  * written on, in as many words. Those are counts, so the claim
+                  * has to be the one the app actually makes — nothing is
+                  * graded. It counts what you noticed, never how well.
+                  */}
+                <p className="body-copy mt-8 text-pretty text-muted">
+                  <strong className="text-ink">One at a time.</strong> Working on both at once is working on neither, so
+                  the app will not let you. And nothing is graded: a moment is kept or it slipped, and there is no
+                  streak, no percentage, and no score for how you did.
+                </p>
+              </div>
+
+              {/* The look-back screen rather than the walk — the ring already
+                  carries that one, and this is the screen that makes the
+                  paragraph beside it checkable. */}
+              <div className="flex justify-center">
+                <DeviceShot
+                  src="/visuals/fruit-noticed.PNG"
+                  alt="What you have noticed in holyfit: moments counted, and no pattern claimed until there is one."
+                />
+              </div>
             </div>
           </div>
         </Reveal>
