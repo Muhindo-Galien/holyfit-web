@@ -20,7 +20,18 @@ import { site } from '@/config/site';
  * admitting the app is not out yet.
  */
 export default function InstallButton({ size = 'large' }: { size?: 'large' | 'small' }) {
-  const classes = size === 'large' ? 'px-8 py-4 text-base' : 'px-6 py-3 text-sm';
+  /*
+   * Sized against the page, not against itself.
+   *
+   * The large one was `px-8 py-4 text-base` — 181x56 with 16px type, on a site
+   * whose body copy is 15px. It read as a button borrowed from a louder
+   * design. Both are now a step down, and both keep `min-h-11` so the tap area
+   * stays at 44px whatever the padding is doing.
+   */
+  const classes =
+    size === 'large'
+      ? 'min-h-11 px-7 py-3.5 text-[0.9375rem]'
+      : 'min-h-11 px-5 py-2.5 text-sm';
   const solid = `inline-flex items-center justify-center rounded-full bg-ink font-semibold text-background transition hover:opacity-85 ${classes}`;
 
   // Shipped: send people to the store.
