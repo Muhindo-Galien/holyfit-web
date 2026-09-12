@@ -51,6 +51,19 @@ const archFeatures = [
   { label: 'Reflect', angle: 90, color: '#f0a05a' }
 ];
 
+/**
+ * What the fruit catalogue serves today.
+ *
+ * Kept beside the copy that names them so the two cannot disagree. They are
+ * not the first two of the nine — kindness is fifth in Galatians 5:22–23 and
+ * self-control is last — which is why the section leads with the question
+ * rather than with a list.
+ */
+const fruitsOnOffer = [
+  { label: 'Kindness', color: '#e36fd2' },
+  { label: 'Self-control', color: '#3fbf7f' }
+];
+
 const features: OrbitFeature[] = [
   {
     id: 'routine',
@@ -355,6 +368,65 @@ export default function HomePage() {
 
       {/* ---------------------------------------------------------- Features */}
       <FeatureOrbit features={features} />
+
+      {/* -------------------------------------------------------------- Fruit */}
+      {/*
+        * The fruit of the Spirit, given a section of its own rather than a node
+        * on the ring.
+        *
+        * It is the only feature here that operates outside a sitting. Reading,
+        * prayer and the journal all happen while the app is open; this one is
+        * about the hours in between, which is a larger claim and the reason it
+        * is not filed beside them.
+        *
+        * Led by the question rather than the mechanism. "Take up a fruit" is
+        * the only feature on this page whose name does not explain itself —
+        * "prayer list" needs no gloss and this does — so the page asks the
+        * question the app asks and lets that do the explaining.
+        *
+        * Two, not nine. `holyfit-app/src/types/fruit.ts`: "Two are offered
+        * today, kindness and self-control... Nothing in this app may say
+        * otherwise." The catalogue is served from the backend, so a third
+        * arrives without a release and this copy has to be updated by hand.
+        */}
+      <section id="fruit" className="mx-auto max-w-5xl px-5 py-20 sm:px-8 sm:py-28">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-[2.5rem] border border-line px-6 py-14 sm:px-12 sm:py-20">
+            <div className="brand-wash absolute inset-0 opacity-[0.07]" aria-hidden="true" />
+
+            <div className="relative mx-auto max-w-2xl text-center">
+              <p className="eyebrow text-muted">The fruit</p>
+
+              {/* The app's own daily question, verbatim. */}
+              <h2 className="section-title mt-5 text-balance">Who did you find hardest to be kind to today?</h2>
+
+              <p className="lede mt-6 text-pretty text-muted">
+                Take up one fruit of the Spirit for a stretch of days you choose. {site.name} asks you a question a day
+                and gives you somewhere to put the answer. It sits in Reflect, beside the journal, because that is the
+                same sitting.
+              </p>
+
+              <ul className="mt-8 flex flex-wrap justify-center gap-2.5">
+                {fruitsOnOffer.map(fruit => (
+                  <li
+                    key={fruit.label}
+                    className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-semibold text-ink"
+                  >
+                    <span className="size-2 rounded-full" style={{ background: fruit.color }} aria-hidden="true" />
+                    {fruit.label}
+                  </li>
+                ))}
+              </ul>
+
+              <p className="body-copy mx-auto mt-8 max-w-xl text-pretty text-muted">
+                <strong className="text-ink">One at a time.</strong> Working on both at once is working on neither, so
+                the app will not let you. And nothing here is scored: a day is kept or it slipped, and there is no
+                streak, no percentage and no tally anywhere in it. “Day 12 of 40” is a fact about the calendar.
+              </p>
+            </div>
+          </div>
+        </Reveal>
+      </section>
 
       {/* ----------------------------------------------------------- Privacy */}
       <section id="privacy">
