@@ -4,44 +4,33 @@ import { useEffect, useState } from 'react';
 import Typewriter from 'typewriter-effect';
 
 /**
- * The word at the top of the hero arch.
+ * The word at the top of the hero arch: the fruit the app actually offers.
  *
- * It opens on "Fruit of the Spirit", types its way through the nine of them —
- * Galatians 5:22–23, in the order the passage gives them — and returns to the
- * phrase before starting again. The phrase is what makes the loop legible:
- * without it a single word appearing over a handset is just a word.
+ * It opens on "Fruit of the Spirit", names the two a reader can take up, and
+ * returns to the phrase. The phrase is what makes the loop legible — a single
+ * word appearing over a handset is just a word.
  *
- * It sits at the apex because that is the one place on the arc with nothing
- * either side of it. The four sittings occupy the flanks, and the springing
- * points are level with the phone.
+ * **Two, not nine, and that is a product fact rather than a space constraint.**
+ * This cycled all nine of Galatians 5:22–23 and was wrong to: the app serves
+ * its catalogue from the backend and offers kindness and self-control today.
+ * `types/fruit.ts` says so in as many words — "Two are offered today, kindness
+ * and self-control... Nothing in this app may say otherwise" — and a marketing
+ * page listing all nine promises seven that do not exist. When the catalogue
+ * grows, this list grows with it; adding a fruit is a backend deploy, so the
+ * two can drift apart quietly and this is the place that shows it.
  *
- * Typing is done by `typewriter-effect`, which replaced a hand-rolled hook
- * here. Two things about it are worth knowing, because neither is obvious from
- * the README:
- *
- *  - It renders nothing on the server. The component mounts empty and fills in
- *    on the client, so nothing it types is in the HTML. The `sr-only` list
- *    below is therefore not only an accessibility affordance — it is the only
- *    copy of this content a crawler or a reader without JavaScript will ever
- *    see, which is why it carries the whole list rather than a summary.
- *  - It injects its own stylesheet for the cursor unless told not to. Ours is
- *    styled with the rest of the arch, so `skipAddStyles` is on and the cursor
- *    class is ours.
+ * They are also not the first two of the nine — kindness is fifth and
+ * self-control is last — which is why the phrase leads rather than the list.
  */
 
-/** The anchor, then the list. Index 0 is what the loop returns to. */
-const FRUIT = [
-  'Fruit of the Spirit',
-  'Love',
-  'Joy',
-  'Peace',
-  'Patience',
-  'Kindness',
-  'Goodness',
-  'Faithfulness',
-  'Gentleness',
-  'Self-control'
-];
+/** The anchor, then what the catalogue serves. Index 0 is what the loop returns to. */
+const FRUIT = ['Fruit of the Spirit', 'Self-control', 'Kindness'];
+
+/* About a second a word, which is what was asked for: long enough to read a
+   short one, short enough that "Self-control" does not outstay it. */
+const TYPE_MS = 45;
+const DELETE_MS = 25;
+const HOLD_MS = 1000;
 
 export default function FruitTicker({ angle }: { angle: number }) {
   /*
@@ -90,8 +79,8 @@ export default function FruitTicker({ angle }: { angle: number }) {
           <Typewriter
             options={{
               loop: true,
-              delay: 45,
-              deleteSpeed: 25,
+              delay: TYPE_MS,
+              deleteSpeed: DELETE_MS,
               skipAddStyles: true,
               wrapperClassName: 'hero-arch-ticker-text',
               cursorClassName: 'hero-arch-caret'
@@ -105,7 +94,7 @@ export default function FruitTicker({ angle }: { angle: number }) {
              */
             onInit={typewriter => {
               FRUIT.forEach(word => {
-                typewriter.typeString(word).pauseFor(1000).deleteAll(25);
+                typewriter.typeString(word).pauseFor(HOLD_MS).deleteAll(DELETE_MS);
               });
               typewriter.start();
             }}
@@ -120,7 +109,9 @@ export default function FruitTicker({ angle }: { angle: number }) {
        * reader gets the nine in one breath instead of a stream of half-typed
        * fragments, and it is what a crawler reads.
        */}
-      <span className="sr-only">The fruit of the Spirit: {FRUIT.slice(1).join(', ')}. Galatians 5:22–23.</span>
+      <span className="sr-only">
+        Take up a fruit of the Spirit: {FRUIT.slice(1).join(' or ').toLowerCase()}. From Galatians 5:22–23.
+      </span>
     </>
   );
 }
