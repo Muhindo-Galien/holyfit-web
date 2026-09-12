@@ -1,8 +1,8 @@
-import { Waitlist } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import OrbField from '@/components/orb-field';
+import WaitlistForm from '@/components/waitlist-form';
 import { site } from '@/config/site';
 
 /**
@@ -39,45 +39,10 @@ export default function WaitlistPage() {
         </p>
       </div>
 
-      {/* Clerk renders its own card. The appearance object below is what keeps
-          it from arriving as a component from a different website. */}
+      {/* Clerk renders its own card; `WaitlistForm` wraps it so the page has
+          somewhere to send people when it does not arrive. */}
       <div className="mt-10 w-full max-w-md">
-        <Waitlist
-          /*
-           * Clerk mounts on the client, so without this the card's space is
-           * empty until its script arrives — and empty space above a paragraph
-           * that says "leave an address" reads as a form that failed rather
-           * than one still loading.
-           */
-          fallback={
-            <div className="flex h-44 w-full items-center justify-center rounded-2xl border border-line bg-surface text-sm text-muted">
-              Loading the form…
-            </div>
-          }
-          appearance={{
-            // Names are Clerk v7's. `colorText` / `colorTextSecondary` /
-            // `colorInputBackground` are the older spellings and no longer
-            // type-check — the compiler is the only place that says so.
-            variables: {
-              colorPrimary: '#5b72ef',
-              colorBackground: 'var(--surface)',
-              colorForeground: 'var(--text)',
-              colorMutedForeground: 'var(--text-secondary)',
-              colorInput: 'var(--background)',
-              colorInputForeground: 'var(--text)',
-              colorNeutral: 'var(--text)',
-              borderRadius: '0.9rem',
-              fontFamily: 'var(--font-jakarta), ui-sans-serif, system-ui, sans-serif'
-            },
-            elements: {
-              rootBox: 'w-full',
-              cardBox: 'w-full shadow-none',
-              card: 'shadow-none border border-line',
-              // Clerk's own branding line, which this page does not need.
-              footer: 'hidden'
-            }
-          }}
-        />
+        <WaitlistForm />
       </div>
 
       <p className="mt-8 max-w-md text-center text-sm text-muted">
