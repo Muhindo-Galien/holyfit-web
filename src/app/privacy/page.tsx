@@ -134,8 +134,14 @@ const sections: LegalSection[] = [
             not request access to any of these.
           </li>
           <li>
-            <strong>No cookies on this website</strong> beyond what is needed to serve the page. There is no tracking
-            pixel and no third-party script; the fonts are served from this site rather than from Google.
+            <strong>No cookies on this website</strong> beyond what is needed to serve the page, and no tracking pixel
+            anywhere on it. The fonts are served from this site rather than from Google.
+          </li>
+          <li>
+            <strong>No third-party script, except on the waitlist page.</strong> That one page loads Clerk, because it
+            is a form that has to reach an identity service, and Clerk sets a cookie of its own while you use it. It is
+            the only page on this site that does either — the home page, this policy and the terms load nothing from
+            anyone else, which is why the waitlist sits on a route of its own rather than in the footer of every page.
           </li>
         </ul>
       </>

@@ -124,6 +124,19 @@ export const site = {
    */
   installUrl: '',
 
+  /**
+   * Whether the waitlist is open.
+   *
+   * A switch rather than a deploy: Clerk's access mode can be flipped in their
+   * dashboard, and this is what keeps the site's button in step with it. Turn
+   * it off and the page falls back to saying the app is not out yet, which is
+   * better than a form that collects addresses nobody is reading.
+   *
+   * It has no effect once `installUrl` is set — at that point there is a store
+   * to send people to and a waitlist is a detour.
+   */
+  waitlistEnabled: true,
+
   /** Shown beside the install button so nobody is surprised by TestFlight. */
   installNote: 'HolyFit is in testing. The link opens TestFlight. Install that first, then HolyFit from inside it.'
 } as const;
@@ -140,8 +153,9 @@ export const MINIMUM_AGE = 13;
 export const subprocessors = [
   {
     name: 'Clerk',
-    role: 'Accounts and sign-in',
-    handles: 'Your email address, name, username and profile picture, and the session that keeps you signed in.',
+    role: 'Accounts, sign-in, and the waitlist',
+    handles:
+      'Your email address, name, username and profile picture, and the session that keeps you signed in. If you joined the waitlist before the app opened, the address you gave — and nothing else — until the invitation is sent or you ask for it to be removed.',
     location: 'United States',
     policy: 'https://clerk.com/legal/privacy'
   },
