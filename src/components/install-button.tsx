@@ -5,34 +5,47 @@ import { site } from '@/config/site';
 /**
  * The one thing the page is asking for.
  *
- * It refuses to be a link when there is nowhere to link to. The public
- * TestFlight address does not exist until it is switched on in App Store
- * Connect, and a button that opens a dead page costs more trust than a button
- * that admits the app is not out yet — the visitor finds out either way, and
- * only one version of it is honest.
+ * Three states, in the order the product will pass through them.
+ *
+ * It used to have two, and the first of them asked for nothing: with no store
+ * link the button became the words "Coming soon to the App Store" and sat
+ * there. That is honest, and it wastes every visitor who arrived ready to act —
+ * they are told to come back later by a page that has no way of telling them
+ * when. The waitlist is the missing middle: the app is still not out, and now
+ * there is something to do about it.
+ *
+ * It still refuses to be a link when there is nowhere to link to. If the
+ * waitlist is switched off *and* there is no store URL, it falls back to the
+ * old sign, because a button opening a dead page costs more trust than a button
+ * admitting the app is not out yet.
  */
 export default function InstallButton({ size = 'large' }: { size?: 'large' | 'small' }) {
-  const classes =
-    size === 'large'
-      ? 'px-8 py-4 text-base'
-      : 'px-6 py-3 text-sm';
+  const classes = size === 'large' ? 'px-8 py-4 text-base' : 'px-6 py-3 text-sm';
+  const solid = `inline-flex items-center justify-center rounded-full bg-ink font-semibold text-background transition hover:opacity-85 ${classes}`;
 
-  if (!site.installUrl) {
+  // Shipped: send people to the store.
+  if (site.installUrl) {
     return (
-      <span
-        className={`inline-flex items-center justify-center rounded-full border border-line bg-elevated font-semibold text-muted ${classes}`}
-      >
-        Coming soon to the App Store
-      </span>
+      <Link href={site.installUrl} className={solid}>
+        Get {site.name}
+      </Link>
+    );
+  }
+
+  // Not shipped, but taking names.
+  if (site.waitlistEnabled) {
+    return (
+      <Link href="/waitlist" className={solid}>
+        Join the waitlist
+      </Link>
     );
   }
 
   return (
-    <Link
-      href={site.installUrl}
-      className={`inline-flex items-center justify-center rounded-full bg-ink font-semibold text-background transition hover:opacity-85 ${classes}`}
+    <span
+      className={`inline-flex items-center justify-center rounded-full border border-line bg-elevated font-semibold text-muted ${classes}`}
     >
-      Get {site.name}
-    </Link>
+      Coming soon to the App Store
+    </span>
   );
 }

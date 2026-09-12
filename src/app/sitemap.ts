@@ -2,7 +2,14 @@ import type { MetadataRoute } from 'next';
 
 import { site } from '@/config/site';
 
-/** Four pages, so it is written out rather than crawled from the filesystem. */
+/**
+ * Four pages, so it is written out rather than crawled from the filesystem.
+ *
+ * `/waitlist` is deliberately absent. It is `noindex` — a form is not something
+ * anyone should arrive at from a search result, and it would compete with the
+ * home page for the brand query — and listing a noindexed URL in a sitemap is
+ * the contradiction Search Console reports as "Indexed, though blocked".
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
   const updated = new Date(site.lastUpdated);
 
