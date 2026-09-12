@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import InstallButton from '@/components/install-button';
+import ThemeToggle from '@/components/theme-toggle';
 import { site } from '@/config/site';
 
 /**
@@ -60,7 +61,7 @@ export default function SiteHeader() {
           <span>{site.name}</span>
         </Link>
 
-        <nav className="flex items-center gap-6 text-[0.9375rem]">
+        <nav className="flex items-center gap-4 text-[0.9375rem] sm:gap-6">
           {/* Hidden on the narrowest screens rather than folded into a menu:
               both are anchors into a page the visitor can simply scroll. */}
           <Link href="/#routine" className="hidden items-center text-muted transition hover:text-ink sm:flex sm:min-h-11">
@@ -77,6 +78,8 @@ export default function SiteHeader() {
           >
             Support
           </Link>
+
+          <ThemeToggle />
 
           <div className="hidden sm:block">
             <InstallButton size="small" />

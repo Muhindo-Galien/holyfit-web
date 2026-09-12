@@ -115,7 +115,32 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={jakarta.variable}>
+    /*
+     * `suppressHydrationWarning` because the script below writes `data-theme`
+     * onto this element before React hydrates. Without it React compares the
+     * server's markup to a DOM that has already been changed and warns about a
+     * mismatch it cannot do anything about.
+     */
+    <html lang="en" className={jakarta.variable} suppressHydrationWarning>
+      <head>
+        {/*
+          * Applies the stored theme before the first paint.
+          *
+          * It has to be inline and it has to be here. Anything that waits for
+          * React renders the page in the system scheme first and then snaps to
+          * the stored one — a white flash on every load for a reader who chose
+          * dark, which is precisely the reader most likely to notice.
+          *
+          * No stored value means no attribute, which leaves `color-scheme:
+          * light dark` in charge and the operating system deciding. That is the
+          * default state, not a fallback.
+          */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('holyfit.theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t}}catch(e){}`
+          }}
+        />
+      </head>
       <body className="font-sans antialiased">
         <StructuredData data={siteGraph} />
 

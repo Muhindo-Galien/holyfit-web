@@ -8,46 +8,53 @@
  * files have to be edited together; there is no shared package, and inventing
  * one for eight colours would be worse than the duplication.
  */
+/*
+ * One palette, both schemes, written once.
+ *
+ * `light-dark()` picks between its two arguments according to the element's
+ * `color-scheme`, which is what lets the reader's own choice and the operating
+ * system's use the same declarations. The alternative — a `:root` block plus a
+ * `prefers-color-scheme` block plus a `[data-theme]` block — is the same values
+ * written three times, and the third copy is the one that gets forgotten.
+ *
+ * Values are `Colors.light` and `Colors.dark` from the app, copied value for
+ * value rather than re-picked.
+ */
 :root {
-  /* `Colors.light` — background, backgroundElement, backgroundSelected, text,
-     textSecondary. Copied value for value, not re-picked. */
-  --background: #ffffff;
-  --surface: #f0f0f3;
-  --elevated: #e0e1e6;
-  /* The app draws borders in `backgroundSelected` — the same colour it fills a
-     selected row with. One value doing both jobs is the app's decision, kept. */
-  --line: #e0e1e6;
-  --text: #000000;
-  --text-secondary: #60646c;
+  /* Both, so `light-dark()` has something to choose from. The attribute below
+     narrows it to one. */
+  color-scheme: light dark;
+
+  --background: light-dark(#ffffff, #000000);
+  /* `backgroundElement` / `backgroundSelected`. The app draws borders in
+     `backgroundSelected` too — one value doing both jobs is its decision. */
+  --surface: light-dark(#f0f0f3, #212225);
+  --elevated: light-dark(#e0e1e6, #2e3135);
+  --line: light-dark(#e0e1e6, #2e3135);
+  --text: light-dark(#000000, #ffffff);
+  --text-secondary: light-dark(#60646c, #b0b4ba);
   /* `brandSurface`: the wash the app opens on. Not the page background — the
      app reserves it for brand surfaces, and so does this page. */
-  --brand-surface: #f2eff8;
-  --accent: #5b72ef;
-  --danger: #c5221f;
+  --brand-surface: light-dark(#f2eff8, #121019);
+  /* The dark value is the one deliberate departure from `Colors.dark`, which
+     has no dark accent because the app never sets #5b72ef as text on black —
+     that pairing is 4.0:1 and fails AA. This page does, in links. */
+  --accent: light-dark(#5b72ef, #8b9bf5);
+  --danger: light-dark(#c5221f, #f2685e);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* `Colors.dark`. Pure black, as the app is.
-       This used to be `brandSurface` (#121019) on the theory that a full-bleed
-       #000 marketing page reads as a void on a desktop monitor. That may be
-       true of marketing pages in general and is beside the point here: the
-       screenshots on this page are of an app whose dark ground is #000, and a
-       near-black page behind them made every handset look like it was showing
-       a slightly different black. Brand identity beat the theory. */
-    --background: #000000;
-    --surface: #212225;
-    --elevated: #2e3135;
-    --line: #2e3135;
-    --text: #ffffff;
-    --text-secondary: #b0b4ba;
-    --brand-surface: #121019;
-    /* The one deliberate departure from `Colors.dark`, which has no dark accent
-       because the app never sets #5b72ef as text on black — that pairing is
-       4.0:1 and fails AA. This page does, in links, so it needs the lift. */
-    --accent: #8b9bf5;
-    --danger: #f2685e;
-  }
+/*
+ * An explicit choice outranks the operating system, exactly as it does in the
+ * app: pressing the toggle ends "follow the system" until it is pressed again.
+ * Setting `color-scheme` is the whole mechanism — every `light-dark()` above
+ * resolves against it, and so do form controls and scrollbars.
+ */
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -84,6 +91,10 @@
  * Values are `Colors.dark` from the app, same as the dark-mode block above.
  */
 .on-dark {
+  /* Not only the tokens: this is what makes a scrollbar or a form control
+     inside the dark run render dark too, whatever the page is set to. */
+  color-scheme: dark;
+
   --background: #000000;
   --surface: #212225;
   --elevated: #2e3135;
@@ -313,14 +324,10 @@ body {
    * CSS. Real captures replaced that, so the rest went with it. This one
    * remains because it backs the screen while an image is still loading, and a
    * white flash inside a black handset is worse than a moment of nothing. */
-  --app-bg: #ffffff;
+  --app-bg: light-dark(#ffffff, #000000);
 }
 
-@media (prefers-color-scheme: dark) {
-  .device-screen {
-    --app-bg: #000000;
-  }
-}
+/* Was a `prefers-color-scheme` block, which ignored an explicit choice. */
 
 .device {
   /* Scales as one unit. The screen is laid out at a fixed 300×620 so the type
