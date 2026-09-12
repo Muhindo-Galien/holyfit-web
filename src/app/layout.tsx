@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     'prayer journal app',
     'Christian reflection journal',
     'scripture reading routine',
-    // Difference — long-tail, and the only terms on this list HolyFit can win
+    // Difference — long-tail, and the only terms on this list holyfit can win
     // outright, because they describe what competitors do that it refuses to.
     // Hallow, Glorify and the habit trackers all lean on streaks and ads.
     'devotional app without streaks',

@@ -52,7 +52,7 @@ export default function SiteHeader() {
         scrolled ? 'on-dark border-b border-line/50 bg-background/80 backdrop-blur-xl' : 'border-b border-transparent'
       }`}
     >
-      <div className="mx-auto flex h-[4.25rem] max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
+      <div className="mx-auto flex h-[var(--header-h)] max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
         {/* `-my-2 py-2` grows the tap area to 44px without moving the mark. */}
         <Link href="/" className="-my-2 flex items-center gap-2.5 py-2 text-[1.0625rem] font-bold tracking-tight">
           {/* Downscaled hard — the source is 1024px square — so it is the one place

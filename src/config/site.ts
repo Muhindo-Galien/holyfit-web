@@ -1,5 +1,5 @@
 /**
- * Everything about HolyFit that is a fact rather than a layout.
+ * Everything about holyfit that is a fact rather than a layout.
  *
  * One file because these strings appear in a dozen places across the marketing
  * page, both legal documents and the metadata Apple and Google read — and a
@@ -23,7 +23,19 @@ export function isPending(value: string): boolean {
 }
 
 export const site = {
-  name: 'HolyFit',
+  /*
+   * Lower case, always.
+   *
+   * The app writes it that way everywhere — 25 times to one, `app.json` says
+   * `"name": "holyfit"`, and its own copy reads "holyfit is in testing". The
+   * logo tile sets the wordmark in lower case too, which is why the site's
+   * header had it both ways at once: a tile reading `holyfit` beside a span
+   * reading `HolyFit`, half an inch apart.
+   *
+   * It starts sentences in lower case as a result. That is the brand's own
+   * convention, not a typo, and the app does the same.
+   */
+  name: 'holyfit',
 
   /** One line, used in metadata and as the hero subtitle. */
   tagline: 'A daily rhythm of Bible study, reflection and prayer.',
@@ -79,7 +91,7 @@ export const site = {
    * lawyer, not for this constant. `supportEmail` and `privacyEmail` remain the
    * working contact route either way, which is the part a reader actually uses.
    */
-  operator: 'HolyFit',
+  operator: 'holyfit',
 
   /**
    * Addresses on the public pages.
@@ -114,7 +126,7 @@ export const site = {
   lastUpdated: '8 September 2026',
 
   /**
-   * Where "Get HolyFit" leads.
+   * Where "Get holyfit" leads.
    *
    * TestFlight while the app is in testing — it is the only place it can be
    * installed from — and an App Store URL the day there is one. Empty means the
@@ -138,7 +150,7 @@ export const site = {
   waitlistEnabled: true,
 
   /** Shown beside the install button so nobody is surprised by TestFlight. */
-  installNote: 'HolyFit is in testing. The link opens TestFlight. Install that first, then HolyFit from inside it.'
+  installNote: 'holyfit is in testing. The link opens TestFlight. Install that first, then holyfit from inside it.'
 } as const;
 
 /** The minimum age stated in both documents and matched by the App Store rating. */
@@ -169,7 +181,7 @@ export const subprocessors = [
   },
   {
     name: 'Railway',
-    role: 'Hosting for the HolyFit API',
+    role: 'Hosting for the holyfit API',
     handles: 'Requests between the app and the database, and short-lived server logs of those requests.',
     location: 'United States',
     policy: 'https://railway.app/legal/privacy'

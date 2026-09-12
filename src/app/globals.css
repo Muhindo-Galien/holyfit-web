@@ -89,6 +89,14 @@
  * below without a single utility changing. The hero keeps the theme.
  *
  * Values are `Colors.dark` from the app, same as the dark-mode block above.
+ *
+ * It sets no `background-color`, and that is load-bearing. It used to, and the
+ * declaration was unlayered while Tailwind's utilities live in `@layer
+ * utilities` — unlayered wins, so the moment the sticky header also took this
+ * class its own `bg-background/80` was silently overridden by an opaque black.
+ * The header stopped being translucent, `backdrop-blur-xl` had nothing left to
+ * blur, and it read as a solid slab. Whatever wants a ground now asks for one:
+ * the page wrapper with `bg-background`, the header with `bg-background/80`.
  */
 .on-dark {
   /* Not only the tokens: this is what makes a scrollbar or a form control
@@ -107,7 +115,6 @@
   --accent: #8b9bf5;
   --danger: #f2685e;
 
-  background-color: var(--background);
   color: var(--text);
 }
 
@@ -281,10 +288,27 @@
   }
 }
 
+/*
+ * The header's height, in one place.
+ *
+ * Three things have to agree on this number: the bar itself, the hero's
+ * negative margin that pulls the orb field up behind it, and the matching
+ * padding that puts the content back. They were three literals with a comment
+ * asking the next person to keep them in step, which is a comment doing a
+ * variable's job.
+ *
+ * 4.75rem rather than the 4.25rem it was. Every control in the bar is now at
+ * least 44px for its tap target, and at 68px that left twelve pixels above and
+ * below them — the contents did not sit in the header so much as fill it.
+ */
+:root {
+  --header-h: 4.75rem;
+}
+
 html {
   scroll-behavior: smooth;
   /* Anchored sections land below the sticky header instead of under it. */
-  scroll-padding-top: 5.5rem;
+  scroll-padding-top: calc(var(--header-h) + 1.25rem);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1004,7 +1028,7 @@ body {
  *
  * Every size below is a number lifted from the app, not a web scale that
  * happens to look adjacent to it. The page had drifted a long way: the hero was
- * 72px and the legal headings 48px, when the largest type anywhere in HolyFit
+ * 72px and the legal headings 48px, when the largest type anywhere in holyfit
  * is the 52px wordmark on the get-started screen and the largest *heading* is
  * 36px. Type that size does not read as the same product as the screenshots
  * sitting next to it — it reads as a marketing page about some other app.

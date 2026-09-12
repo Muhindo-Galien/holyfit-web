@@ -19,7 +19,7 @@ import { site } from '@/config/site';
  * an interface without showing one asks the visitor to take it on faith.
  *
  * What it does **not** borrow from those pages is their social proof. Glorify
- * opens with twenty million downloads and a 4.9 average; HolyFit has no users
+ * opens with twenty million downloads and a 4.9 average; holyfit has no users
  * yet, and numbers or testimonials invented to fill that space would be a lie
  * told on the same page as a privacy policy. So the page claims nothing it
  * cannot show, and the space where a competitor puts its numbers is simply
@@ -58,7 +58,7 @@ const features: OrbitFeature[] = [
     title: 'It starts with one answer',
     body: 'How many times a day do you want to sit down, and when? Up to two sittings each of reading, prayer and reflection, at hours you pick. Everything else in the app follows from that: what today looks like, what it reminds you of, what it counts.',
     src: '/visuals/routine.PNG',
-    alt: 'Setting a routine in HolyFit: reading, prayer and reflection, each at an hour you choose.',
+    alt: 'Setting a routine in holyfit: reading, prayer and reflection, each at an hour you choose.',
     color: '#5b72ef'
   },
   {
@@ -67,7 +67,7 @@ const features: OrbitFeature[] = [
     title: 'Read, and keep what it left you',
     body: 'Build a plan from the passages you actually want to read (a book, a theme, a list someone gave you) and set the days it runs. One passage at a time, in your translation, ticked off when you have read it.',
     src: '/visuals/plan-passage.PNG',
-    alt: 'A passage open in HolyFit, with the plan it belongs to above it.',
+    alt: 'A passage open in holyfit, with the plan it belongs to above it.',
     color: '#7bd44b'
   },
   {
@@ -76,7 +76,7 @@ const features: OrbitFeature[] = [
     title: 'A list you keep, not a wall you perform on',
     body: 'Write down what you are carrying and come back to it. Nobody else can see it. There is no feed, no sharing, and no other reader anywhere in the app.',
     src: '/visuals/prayer-sreen.PNG',
-    alt: 'The prayer list in HolyFit.',
+    alt: 'The prayer list in holyfit.',
     color: '#e36fd2'
   },
   {
@@ -85,7 +85,7 @@ const features: OrbitFeature[] = [
     title: 'The day, worked out rather than stored',
     body: 'Home shows what you have kept and what is next, derived from the routine you set rather than saved beside it. Open the app and the next sitting is already the first thing on the screen.',
     src: '/visuals/home-with-hero.PNG',
-    alt: 'The HolyFit home screen: today’s plan, the hours of each sitting, and the prayers being carried.',
+    alt: 'The holyfit home screen: today’s plan, the hours of each sitting, and the prayers being carried.',
     color: '#3fbf7f'
   },
   {
@@ -94,7 +94,7 @@ const features: OrbitFeature[] = [
     title: 'It reminds you, quietly',
     body: 'Each sitting gets a notice at the hour you picked, scheduled on your phone by your phone. No server is ever told when you pray, because there is no push token to tell it with.',
     src: '/visuals/notifications.PNG',
-    alt: 'HolyFit notifications: a prayer to carry, and a finished reading plan.',
+    alt: 'holyfit notifications: a prayer to carry, and a finished reading plan.',
     color: '#f2a0c0'
   },
   {
@@ -103,7 +103,7 @@ const features: OrbitFeature[] = [
     title: 'Your translation, your hours, your account',
     body: 'Pick the translation new plans are built in, change the routine whenever you like, and delete the account and everything in it from the same screen. Nothing is buried.',
     src: '/visuals/profile.PNG',
-    alt: 'The HolyFit profile screen: account details, routine, and translation.',
+    alt: 'The holyfit profile screen: account details, routine, and translation.',
     color: '#e36fd2'
   },
   {
@@ -112,7 +112,7 @@ const features: OrbitFeature[] = [
     title: 'A few lines a day, where you can find them',
     body: 'One entry per day, private and searchable. The app works out your streak from the entries themselves rather than asking you to defend one.',
     src: '/visuals/refrelct-screen.PNG',
-    alt: 'The reflection journal in HolyFit, one entry a day.',
+    alt: 'The reflection journal in holyfit, one entry a day.',
     color: '#f0a05a'
   }
 ];
@@ -151,7 +151,7 @@ const faqs = [
   },
   {
     q: 'Is there an Android version?',
-    a: 'Not yet. HolyFit is being tested on iOS first. There is no date to promise, and one will not be invented here.'
+    a: 'Not yet. holyfit is being tested on iOS first. There is no date to promise, and one will not be invented here.'
   },
   {
     q: 'How do I delete my account?',
@@ -175,10 +175,10 @@ export default function HomePage() {
         * top of the page — visible before the visitor had scrolled anything.
         * The negative margin lets the orb field run to the very top of the
         * document and the matching padding puts the content back where it was,
-        * so the header now floats in the wash instead of capping it. The number
-        * is the header's height; the two must be changed together.
+        * so the header now floats in the wash instead of capping it. Both read
+        * `--header-h`, so the bar and this pair cannot drift apart.
         */}
-      <section className="orb-field relative -mt-[4.25rem] pt-[4.25rem]">
+      <section className="orb-field relative -mt-[var(--header-h)] pt-[var(--header-h)]">
         <OrbField />
         <div className="mx-auto max-w-5xl px-5 pb-24 pt-20 text-center sm:px-8 sm:pb-32 sm:pt-28">
           <Reveal>
@@ -241,7 +241,7 @@ export default function HomePage() {
       </section>
 
       {/* Everything below the hero shares one ground. See `.on-dark`. */}
-      <div className="on-dark">
+      <div className="on-dark bg-background">
       {/* -------------------------------------------------------- Trust strip */}
       <section className="border-y border-line/50">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-5 py-6 text-center text-sm font-semibold text-muted sm:px-8">

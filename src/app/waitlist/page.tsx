@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 
 export default function WaitlistPage() {
   return (
-    <section className="orb-field relative -mt-[4.25rem] flex min-h-screen flex-col items-center justify-center px-5 pb-20 pt-[7rem] sm:px-8">
+    <section className="orb-field relative -mt-[var(--header-h)] flex min-h-screen flex-col items-center justify-center px-5 pb-20 pt-[calc(var(--header-h)+3rem)] sm:px-8">
       <OrbField />
 
       <div className="w-full max-w-md text-center">

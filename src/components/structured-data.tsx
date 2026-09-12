@@ -4,7 +4,7 @@ import { site } from '@/config/site';
  * JSON-LD, for the machines that read this site rather than look at it.
  *
  * Google reads structured data to work out what a page *is* — that this is an
- * app and not an article, that HolyFit is an organisation with a logo, that the
+ * app and not an article, that holyfit is an organisation with a logo, that the
  * questions near the bottom of the home page are questions. None of that is
  * inferable from the markup with any confidence, and none of it was declared.
  *

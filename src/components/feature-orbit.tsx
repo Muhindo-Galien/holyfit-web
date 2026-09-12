@@ -144,7 +144,7 @@ export default function FeatureOrbit({ features }: { features: OrbitFeature[] })
       style={live ? ({ '--orbit-count': features.length } as React.CSSProperties) : undefined}
     >
       <h2 id="features-heading" className="sr-only">
-        What HolyFit does
+        What holyfit does
       </h2>
 
       <div className={live ? 'sticky top-0 flex min-h-screen items-center py-16' : 'py-16'}>
