@@ -21,9 +21,19 @@ import { site } from '@/config/site';
  * the component says so and offers the address that has always worked.
  *
  * Watching the DOM rather than listening for an error, because Clerk does not
- * expose one — it fails inside its own iframe-less widget and the surrounding
- * React never hears about it. What a visitor cares about is whether there is a
- * field to type in, so that is what gets checked.
+ * expose one — it fails inside its own widget and the surrounding React never
+ * hears about it.
+ *
+ * **It watches for Clerk rendering anything, not for an input.** Looking for a
+ * field was the obvious check and was wrong in the one case that matters most:
+ * a successful join replaces the form with a confirmation, which has no input.
+ * Anyone who submitted inside the grace period — or who had joined before and
+ * came back, since Clerk renders them straight into that confirmation — was
+ * told the form had failed to load while looking at proof that it had not.
+ *
+ * Every element Clerk renders carries a `cl-` class; that is the same contract
+ * the `appearance.elements` map is built on, so it is as stable as the styling
+ * already relies on.
  */
 
 /** Long enough for a slow phone on a bad connection, short enough to matter. */
@@ -37,26 +47,43 @@ export default function WaitlistForm() {
     const node = host.current;
     if (!node) return;
 
-    const hasField = () => Boolean(node.querySelector('input'));
+    /* Anything Clerk has put on the page, in any of its states. */
+    const clerkIsHere = () => Boolean(node.querySelector('[class*="cl-"]'));
 
     /*
-     * The timeout alone was not enough. It gave a verdict once, at six
-     * seconds, and a form arriving at seven would then stay hidden behind a
-     * notice saying it had not loaded — the failure state has to be able to
-     * take itself back. The observer watches for a field appearing at any
-     * point and clears the notice when one does.
+     * Latched, so the verdict can only ever go one way.
+     *
+     * Once Clerk has rendered, it has loaded, and nothing it does afterwards —
+     * swapping the form for a confirmation, most of all — should be readable as
+     * a failure to arrive.
+     */
+    let arrived = false;
+
+    const timer = setTimeout(() => {
+      if (!arrived && !clerkIsHere()) setFailed(true);
+    }, GRACE_MS);
+
+    // References `observer` below, which is initialised before anything can
+    // call this — the observer's own callback, or the check after it.
+    const settle = () => {
+      arrived = true;
+      setFailed(false);
+      observer.disconnect();
+      clearTimeout(timer);
+    };
+
+    /*
+     * The timeout alone was not enough either: it gave its verdict once, so a
+     * form arriving at seven seconds would have stayed hidden behind a notice
+     * saying it never came.
      */
     const observer = new MutationObserver(() => {
-      if (hasField()) {
-        setFailed(false);
-        observer.disconnect();
-      }
+      if (clerkIsHere()) settle();
     });
     observer.observe(node, { childList: true, subtree: true });
 
-    const timer = setTimeout(() => {
-      if (!hasField()) setFailed(true);
-    }, GRACE_MS);
+    // Covers the case where Clerk was already on the page before this ran.
+    if (clerkIsHere()) settle();
 
     return () => {
       clearTimeout(timer);
