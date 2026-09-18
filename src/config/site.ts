@@ -139,7 +139,7 @@ export const site = {
    */
   updated: {
     privacy: '12 September 2026',
-    terms: '8 September 2026'
+    terms: '17 September 2026'
   },
 
   /**
@@ -151,6 +151,24 @@ export const site = {
    * buttons say so instead of leading nowhere. Keep this in step with
    * `INVITE_URL` in the app's `src/lib/invite.ts`.
    */
+  /*
+   * What it costs.
+   *
+   * One place, because six say it: the FAQ, the line under the install button,
+   * the waitlist page, the Terms' price clause, the Terms' liability cap, and
+   * the `Offer` in the structured data. A price quoted in six places and stored
+   * in none is a price that will disagree with itself.
+   *
+   * `amount` and `currency` sit apart from `label` because the structured data
+   * needs the machine form and the copy needs the readable one.
+   */
+  price: {
+    amount: '3.99',
+    currency: 'USD',
+    label: '$3.99',
+    period: 'month'
+  },
+
   installUrl: '',
 
   /**

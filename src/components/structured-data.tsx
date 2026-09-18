@@ -85,10 +85,17 @@ export const siteGraph = {
  * `MobileApplication` rather than the broader `SoftwareApplication`, because
  * that is what it is — iOS only, as the FAQ says in as many words.
  *
- * The price is declared as 0 because it is 0, and the FAQ says so on the same
- * page. `downloadUrl` is deliberately absent while `installUrl` is empty:
- * pointing at a link that does not exist yet would be worse than saying
- * nothing, and the App Store URL can be added here when there is one.
+ * The price comes from `site.price`, so the `Offer` here and the copy on the
+ * page cannot disagree — it used to be a hardcoded 0 beside a FAQ that said
+ * the app was free, and both were true at the time.
+ *
+ * Both `price` and a `UnitPriceSpecification` are declared. Google's software
+ * rich result reads `offers.price`, which on its own would state 3.99 without
+ * saying 3.99 *per what*; the specification is what carries the billing period.
+ *
+ * `downloadUrl` is deliberately absent while `installUrl` is empty: pointing at
+ * a link that does not exist yet would be worse than saying nothing, and the
+ * App Store URL can be added here when there is one.
  */
 export function homeGraph(faqs: readonly { q: string; a: string }[]) {
   return {
@@ -104,9 +111,17 @@ export function homeGraph(faqs: readonly { q: string; a: string }[]) {
         publisher: { '@id': ORGANISATION_ID },
         offers: {
           '@type': 'Offer',
-          price: '0',
-          priceCurrency: 'USD',
-          availability: 'https://schema.org/PreOrder'
+          price: site.price.amount,
+          priceCurrency: site.price.currency,
+          availability: 'https://schema.org/PreOrder',
+          priceSpecification: {
+            '@type': 'UnitPriceSpecification',
+            price: site.price.amount,
+            priceCurrency: site.price.currency,
+            billingDuration: 1,
+            billingIncrement: 1,
+            unitCode: 'MON'
+          }
         }
       },
       {

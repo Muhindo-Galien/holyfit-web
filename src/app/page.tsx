@@ -148,8 +148,8 @@ const promises = [
 
 const faqs = [
   {
-    q: `Is ${site.name} free?`,
-    a: 'Yes. No charge, no subscription and no advertising. If that ever changes it will be announced in the app before it takes effect, never applied to an account that already exists without warning.'
+    q: `What does ${site.name} cost?`,
+    a: `${site.price.label} a ${site.price.period}, billed through the App Store. There is no advertising, no tracking and nothing sold — the subscription is the only way the app earns anything, which is why it does not need a second way. Cancel whenever you like in your App Store settings; it runs to the end of the period you have paid for and does not renew.`
   },
   {
     q: 'Can other people see what I write?',
@@ -219,6 +219,12 @@ export default function HomePage() {
             <div className="mt-10 flex flex-col items-center gap-4">
               <InstallButton />
               {site.installUrl ? <p className="max-w-sm text-sm text-muted">{site.installNote}</p> : null}
+              {/* Said here rather than left for the App Store page. A visitor
+                  who finds out the price after clicking has been handled, and
+                  this is not a page that handles people. */}
+              <p className="max-w-sm text-sm text-muted">
+                {site.price.label} a {site.price.period}. No ads, no tracking, nothing sold.
+              </p>
             </div>
           </Reveal>
 
