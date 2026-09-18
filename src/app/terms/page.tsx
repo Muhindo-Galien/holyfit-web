@@ -399,6 +399,7 @@ const sections: LegalSection[] = [
 export default function TermsPage() {
   return (
     <LegalPage
+      updated={site.updated.terms}
       title="Terms of Service"
       pending={[site.governingLaw]}
       summary={
