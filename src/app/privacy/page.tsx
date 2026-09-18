@@ -433,6 +433,7 @@ const sections: LegalSection[] = [
 export default function PrivacyPage() {
   return (
     <LegalPage
+      updated={site.updated.privacy}
       title="Privacy Policy"
       summary={
         <>

@@ -15,6 +15,8 @@ type LegalPageProps = {
   /** The one-paragraph version, read by everyone who reads nothing else. */
   summary: ReactNode;
   sections: LegalSection[];
+  /** This document's own revision date, from `site.updated`. */
+  updated: string;
   /** Values from `config/site.ts` this document depends on being filled in. */
   pending?: string[];
 };
@@ -22,8 +24,9 @@ type LegalPageProps = {
 /**
  * The shell both legal documents sit in.
  *
- * Shared because the two have to agree about all of it — the dates, where the
- * contents list sits, how a clause is numbered and linked. They are read side by
+ * Shared because the two have to agree about all of it — where the contents
+ * list sits, how a clause is numbered and linked. Not the revision date: that
+ * belongs to the document, not to the shell, and is passed in. They are read side by
  * side by exactly one audience that matters at submission time, and two
  * documents that look like they came from different companies invite the
  * question of who wrote them.
@@ -31,7 +34,7 @@ type LegalPageProps = {
  * The contents list is built from the section data rather than hand-written, so
  * adding a clause cannot leave the list a clause short.
  */
-export default function LegalPage({ title, summary, sections, pending = [] }: LegalPageProps) {
+export default function LegalPage({ title, summary, sections, updated, pending = [] }: LegalPageProps) {
   return (
     <article className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
       <header>
@@ -44,7 +47,7 @@ export default function LegalPage({ title, summary, sections, pending = [] }: Le
           </div>
           <div className="flex gap-2">
             <dt className="font-semibold">Last updated</dt>
-            <dd>{site.lastUpdated}</dd>
+            <dd>{updated}</dd>
           </div>
         </dl>
       </header>

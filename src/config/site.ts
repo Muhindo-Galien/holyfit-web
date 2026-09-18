@@ -123,7 +123,24 @@ export const site = {
    * effective date is what a reviewer and a regulator look at first.
    */
   effectiveDate: '8 September 2026',
-  lastUpdated: '8 September 2026',
+  /*
+   * One date per document, because they change independently.
+   *
+   * This was a single `lastUpdated` shared by both, which is fine right up
+   * until one of them changes: the waitlist disclosure went into the privacy
+   * policy on 12 September and the shared value still read the 8th, so the
+   * document had been materially changed and said it had not. Bumping the
+   * shared value would have fixed that by making the terms claim a revision
+   * they never had.
+   *
+   * Update the one you edited. A legal document's own date is the only thing on
+   * the page a reader can use to tell whether they have seen this version
+   * before.
+   */
+  updated: {
+    privacy: '12 September 2026',
+    terms: '8 September 2026'
+  },
 
   /**
    * Where "Get holyfit" leads.
