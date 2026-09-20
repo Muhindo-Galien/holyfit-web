@@ -901,6 +901,64 @@ body {
   opacity: 1;
 }
 
+/*
+ * Priority, expressed by promoting the practice rather than by dimming the rest.
+ *
+ * Five of the eight nodes are the app itself — the routine and the sittings —
+ * and three are the apparatus around them. Opal's site draws that line by
+ * giving four features a screen each and never naming the others; a ring has
+ * every node on screen at once, so the line has to be drawn in weight instead.
+ *
+ * Only the *core* rule exists. The obvious symmetric version, fading `.is-more`
+ * back, was written first and thrown away: those labels already run
+ * `--text-secondary` on `--surface`, which clears 4.5:1 with very little to
+ * spare, and multiplying it by an opacity is how a supporting feature becomes
+ * unreadable to make an editorial point. Brighter is free; dimmer is not.
+ */
+.orbit-node.is-core {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* `:not(.is-active)` is doing real work, not tidying. This rule sits after
+   `.orbit-node.is-active .orbit-node-dot { opacity: 1 }` at equal specificity,
+   so without it every core node's dot would be stuck at 0.8 — including the
+   selected one, whose whole job is to be the bright one. */
+.orbit-node.is-core:not(.is-active) .orbit-node-dot {
+  opacity: 0.8;
+}
+
+/*
+ * The panel's eyebrow, built as a copy of the node that opened it.
+ *
+ * It was two words of small caps in `--text-secondary`, which named the feature
+ * without connecting it to anything. On a ring of eight that connection is the
+ * whole navigation: the visitor sees a pill light up out on the ellipse and
+ * needs the same pill at the top of the words to know they are looking at its
+ * panel and not the one before it. Same shape, same dot, same colour.
+ */
+.orbit-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: var(--elevated);
+  border: 1px solid color-mix(in oklab, var(--pill-color) 45%, var(--line));
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.orbit-eyebrow-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--pill-color);
+}
+
 /* The phone, scaled from the stage rather than given a size of its own, so it
    keeps the exact proportions `.device` is built at. */
 .orbit-phone {

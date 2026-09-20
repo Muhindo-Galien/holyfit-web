@@ -198,11 +198,18 @@ const sections: LegalSection[] = [
     body: (
       <>
         <p>
-          The Service is free to use at the moment. There are no ads and no purchases inside the app.
+          The Service costs {site.price.label} a {site.price.period}, billed by Apple through your App Store account.
+          There are no ads, no other purchases inside the app, and nothing about you is sold to anyone.
         </p>
         <p>
-          If we ever introduce a paid feature, we will say so clearly in the app before it applies, and using the free
-          parts will never retroactively cost you anything.
+          It renews each {site.price.period} until you cancel. You can cancel at any time in your App Store settings;
+          the subscription then runs to the end of the period you have already paid for and does not renew. Refunds are
+          handled by Apple under their own policy, not by us.
+        </p>
+        <p>
+          <strong>A price change is never retroactive.</strong> If we change what the Service costs, we will say so in
+          the app before it applies to you, and it will never apply to a period you have already paid for. Anyone
+          testing the app before it was charged for will be told before that changes for them.
         </p>
       </>
     )
@@ -275,7 +282,7 @@ const sections: LegalSection[] = [
         </p>
         <p>
           Our total liability for any claim relating to the Service is limited to the greater of the amount you paid us
-          in the twelve months before the claim (which, while the Service is free, is nothing) or USD 50.
+          in the twelve months before the claim or USD 50.
         </p>
         <p>
           <strong>

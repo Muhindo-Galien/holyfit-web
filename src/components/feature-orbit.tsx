@@ -6,29 +6,37 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import { Device } from '@/components/device';
 
 /**
- * The four features, as one orbit rather than four sections.
+ * Every feature, as one orbit rather than a section each.
  *
- * They used to be four full-height blocks, each with its own handset, scrolled
- * past in order. That reads as a list of specifications: by the third phone the
+ * They used to be full-height blocks, each with its own handset, scrolled past
+ * in order. That reads as a list of specifications: by the third phone the
  * visitor is scrolling rather than looking. Here there is one phone, held, and
  * the app changes inside it as the ring turns — which is closer to what using
  * it is actually like, and takes a quarter of the page height to say.
+ *
+ * **The ring runs in priority order, and shows it.** Opal's site was the
+ * reference for this pass: it gives four named features a full screen each and
+ * simply does not mention the rest, which is a hierarchy stated so plainly it
+ * needs no explaining. A ring cannot do that — every node is on screen at once
+ * by construction — so the equivalent here is the order the nodes are placed
+ * in and the weight each one is given. The argument for the order lives with
+ * the data, in `page.tsx`; `tier` is what carries it into the markup.
  *
  * **The scroll is not hijacked.** The section is tall and its contents are
  * `sticky`; the page scrolls at exactly its normal rate and the composition
  * happens to stay put while it does. Nothing is animated *to* a scroll
  * position, so there is no fighting the wheel and no scroll-stealing.
  *
- * **Everything is in the DOM at all times.** All four titles, bodies and
- * screenshots render on the server and stay rendered — inactive panels are
- * faded, not unmounted. That matters twice over: a crawler sees four features
- * rather than one, and someone without JavaScript gets a legible page instead
- * of a single feature and three ghosts.
+ * **Everything is in the DOM at all times.** Every title, body and screenshot
+ * renders on the server and stays rendered — inactive panels are faded, not
+ * unmounted. That matters twice over: a crawler sees the whole feature set
+ * rather than one of it, and someone without JavaScript gets a legible page
+ * instead of a single feature and seven ghosts.
  *
  * **The ring is also a tablist.** Scroll drives the active index, but each node
  * is a real button: reachable by keyboard, announced by a screen reader, and
- * clickable by anyone who would rather not scroll four screens to see the
- * fourth feature. Scroll is the flourish; the buttons are the interface.
+ * clickable by anyone who would rather not scroll eight screens to reach the
+ * eighth feature. Scroll is the flourish; the buttons are the interface.
  */
 
 export type OrbitFeature = {
@@ -40,6 +48,21 @@ export type OrbitFeature = {
   alt: string;
   /** Which brand orb this feature answers to, from the app's `ORBS`. */
   color: string;
+  /**
+   * How much of a headline this is.
+   *
+   * `core` is the practice itself — the routine and the sittings kept inside
+   * it. `more` is the plumbing around them: the day assembled, the reminder,
+   * the settings. Both are real features and both are shown; the tier only
+   * decides how loudly the node announces itself, so a visitor can tell at a
+   * glance which of the ring is the app and which is the apparatus.
+   *
+   * Priority is expressed by *promoting* the core rather than by dimming the
+   * rest. Fading the supporting nodes would have been the obvious way round
+   * and the wrong one: they are already `--text-secondary` on `--surface`, and
+   * taking opacity off that is how a label stops clearing 4.5:1.
+   */
+  tier: 'core' | 'more';
 };
 
 /** Degrees from twelve o'clock, clockwise, for a node at `index`. */
@@ -125,6 +148,11 @@ export default function FeatureOrbit({ features }: { features: OrbitFeature[] })
     <section
       ref={sectionRef}
       id="features"
+      /* The heading is rendered by the page, immediately above this section.
+         It has to sit outside the track: anything inside it is either stuck to
+         the viewport with the stage or eats a share of the scrub, and the
+         run-in would have made the first feature active while the visitor was
+         still reading the title. `aria-labelledby` reaches across happily. */
       aria-labelledby="features-heading"
       className={live ? 'orbit-track relative' : 'relative'}
       /*
@@ -143,10 +171,6 @@ export default function FeatureOrbit({ features }: { features: OrbitFeature[] })
        */
       style={live ? ({ '--orbit-count': features.length } as React.CSSProperties) : undefined}
     >
-      <h2 id="features-heading" className="sr-only">
-        What holyfit does
-      </h2>
-
       <div className={live ? 'sticky top-0 flex min-h-screen items-center py-16' : 'py-16'}>
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-2 lg:gap-16">
           {/* ------------------------------------------------------ The stage */}
@@ -182,7 +206,7 @@ export default function FeatureOrbit({ features }: { features: OrbitFeature[] })
                     aria-controls={`orbit-panel-${feature.id}`}
                     tabIndex={index === active ? 0 : -1}
                     onClick={() => goTo(index)}
-                    className={`orbit-node ${index === active ? 'is-active' : ''}`}
+                    className={`orbit-node is-${feature.tier} ${index === active ? 'is-active' : ''}`}
                     style={{
                       '--node-angle': `${angleFor(index, features.length)}deg`,
                       '--node-color': feature.color
@@ -206,7 +230,7 @@ export default function FeatureOrbit({ features }: { features: OrbitFeature[] })
                       sizes="(max-width: 640px) 190px, 300px"
                       quality={95}
                       // Only the first is eager: it is what the section opens
-                      // on, and the other three arrive long before their turn.
+                      // on, and the rest arrive long before their turn.
                       priority={index === 0}
                       className={`orbit-screen object-cover ${index === active ? 'is-active' : ''}`}
                     />
@@ -230,7 +254,14 @@ export default function FeatureOrbit({ features }: { features: OrbitFeature[] })
                   aria-labelledby={`orbit-tab-${feature.id}`}
                   className={`orbit-panel ${index === active ? 'is-active' : ''}`}
                 >
-                  <p className="eyebrow text-muted">{feature.eyebrow}</p>
+                  {/* The same pill as the node on the ring, in the same colour.
+                      Two words of small caps did not connect the panel to the
+                      node that opened it, and on a ring of eight the visitor
+                      needs telling which one they are looking at. */}
+                  <p className="orbit-eyebrow" style={{ '--pill-color': feature.color } as React.CSSProperties}>
+                    <span className="orbit-eyebrow-dot" aria-hidden="true" />
+                    {feature.eyebrow}
+                  </p>
                   <h3 className="section-title mt-4 text-balance">{feature.title}</h3>
                   <p className="lede mt-5 text-pretty text-muted">{feature.body}</p>
                 </div>

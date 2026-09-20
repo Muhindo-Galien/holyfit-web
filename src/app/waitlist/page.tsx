@@ -46,7 +46,8 @@ export default function WaitlistPage() {
       </div>
 
       <p className="mt-8 max-w-md text-center text-sm text-muted">
-        Your address is stored by Clerk and used for that one email. Nothing else. See the{' '}
+        {site.name} costs {site.price.label} a {site.price.period} when it opens. Your address is stored by Clerk and
+        used for that one email. Nothing else. See the{' '}
         <Link href="/privacy" className="text-accent underline underline-offset-4">
           privacy policy
         </Link>
