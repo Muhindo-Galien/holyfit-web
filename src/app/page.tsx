@@ -27,13 +27,38 @@ import { site } from '@/config/site';
  */
 
 /**
- * The four features, as data for `FeatureOrbit`.
+ * The features, as data for `FeatureOrbit`, **in priority order**.
  *
  * `screen` used to be a rendered `<DeviceShot>` per feature, because each one
  * had a handset of its own. There is one handset now and the pictures are
  * swapped inside it, so what the orbit needs is the image, not an element
  * wrapping it. The colour is which of the app's `ORBS` each feature answers
  * to, and it is what the wash behind the phone turns to.
+ *
+ * **The array order is the running order, so it has to be argued rather than
+ * inherited.** It was the order the features happened to be written in, which
+ * put Reminders and Profile ahead of the fruit and left Reflect last, behind
+ * two settings screens. Worse, it disagreed with the page's own hero: the arch
+ * over the handset carries Routine, Study, Pray and Reflect, with the fruit
+ * ticking at the apex. Two compositions on one page were naming a different
+ * set of important things.
+ *
+ * So the ring now runs in the order the arch already implied:
+ *
+ *  1. **The routine** — the premise. Nothing below it means anything until
+ *     this is set, and the section above ("What it is") has just said so.
+ *  2. **Study**, 3. **Pray**, 4. **Reflect** — the three sittings, in the
+ *     order the routine offers them. These are the app.
+ *  5. **The fruit** — the one thing here no competitor does, and the reason
+ *     it gets a section of its own directly below as well. It follows Reflect
+ *     because that is literally where it lives.
+ *  6. **Today**, 7. **Reminders**, 8. **Profile** — the plumbing. Real, and
+ *     worth showing, but derived from the five above rather than chosen.
+ *
+ * `tier` is that split made explicit rather than left implicit in the index,
+ * because the ring is also clickable and a visitor who jumps to node seven
+ * should still be able to see it is not a headline. It weights the node; it
+ * does not hide anything.
  */
 /**
  * What the arch over the handset carries: the four sittings, styled as the
@@ -67,6 +92,7 @@ const fruitsOnOffer = [
 const features: OrbitFeature[] = [
   {
     id: 'routine',
+    tier: 'core',
     eyebrow: 'The routine',
     title: 'It starts with one answer',
     body: 'How many times a day do you want to sit down, and when? Up to two sittings each of reading, prayer and reflection, at hours you pick. Everything else in the app follows from that: what today looks like, what it reminds you of, what it counts.',
@@ -76,6 +102,7 @@ const features: OrbitFeature[] = [
   },
   {
     id: 'study',
+    tier: 'core',
     eyebrow: 'Study',
     title: 'Read, and keep what it left you',
     body: 'Build a plan from the passages you actually want to read (a book, a theme, a list someone gave you) and set the days it runs. One passage at a time, in your translation, ticked off when you have read it.',
@@ -85,6 +112,7 @@ const features: OrbitFeature[] = [
   },
   {
     id: 'pray',
+    tier: 'core',
     eyebrow: 'Pray',
     title: 'A list you keep, not a wall you perform on',
     body: 'Write down what you are carrying and come back to it. Nobody else can see it. There is no feed, no sharing, and no other reader anywhere in the app.',
@@ -93,7 +121,28 @@ const features: OrbitFeature[] = [
     color: '#e36fd2'
   },
   {
+    id: 'reflect',
+    tier: 'core',
+    eyebrow: 'Reflect',
+    title: 'A few lines a day, where you can find them',
+    body: 'One entry per day, private and searchable. The app works out your streak from the entries themselves rather than asking you to defend one.',
+    src: '/visuals/refrelct-screen.PNG',
+    alt: 'The reflection journal in holyfit, one entry a day.',
+    color: '#f0a05a'
+  },
+  {
+    id: 'fruit',
+    tier: 'core',
+    eyebrow: 'The fruit',
+    title: 'One fruit, for a stretch of days',
+    body: 'Take up kindness or self-control and the app asks you one question a day — “where did you stop yourself?” — with somewhere to put the answer. It sits beside the journal, because that is the same sitting.',
+    src: '/visuals/fruit-walk.PNG',
+    alt: 'Taking up self-control in holyfit: day 1 of 40, today’s question, and a moment noticed.',
+    color: '#3fbf7f'
+  },
+  {
     id: 'today',
+    tier: 'more',
     eyebrow: 'Today',
     title: 'The day, worked out rather than stored',
     body: 'Home shows what you have kept and what is next, derived from the routine you set rather than saved beside it. Open the app and the next sitting is already the first thing on the screen.',
@@ -103,6 +152,7 @@ const features: OrbitFeature[] = [
   },
   {
     id: 'reminders',
+    tier: 'more',
     eyebrow: 'Reminders',
     title: 'It reminds you, quietly',
     body: 'Each sitting gets a notice at the hour you picked, scheduled on your phone by your phone. No server is ever told when you pray, because there is no push token to tell it with.',
@@ -112,30 +162,13 @@ const features: OrbitFeature[] = [
   },
   {
     id: 'profile',
+    tier: 'more',
     eyebrow: 'Profile',
     title: 'Your translation, your hours, your account',
     body: 'Pick the translation new plans are built in, change the routine whenever you like, and delete the account and everything in it from the same screen. Nothing is buried.',
     src: '/visuals/profile.PNG',
     alt: 'The holyfit profile screen: account details, routine, and translation.',
     color: '#e36fd2'
-  },
-  {
-    id: 'fruit',
-    eyebrow: 'The fruit',
-    title: 'One fruit, for a stretch of days',
-    body: 'Take up kindness or self-control and the app asks you one question a day — “where did you stop yourself?” — with somewhere to put the answer. It sits beside the journal, because that is the same sitting.',
-    src: '/visuals/fruit-walk.PNG',
-    alt: 'Taking up self-control in holyfit: day 1 of 40, today’s question, and a moment noticed.',
-    color: '#3fbf7f'
-  },
-  {
-    id: 'reflect',
-    eyebrow: 'Reflect',
-    title: 'A few lines a day, where you can find them',
-    body: 'One entry per day, private and searchable. The app works out your streak from the entries themselves rather than asking you to defend one.',
-    src: '/visuals/refrelct-screen.PNG',
-    alt: 'The reflection journal in holyfit, one entry a day.',
-    color: '#f0a05a'
   }
 ];
 
@@ -382,6 +415,42 @@ export default function HomePage() {
       </section>
 
       {/* ---------------------------------------------------------- Features */}
+      {/*
+        * The ring's title, outside the ring.
+        *
+        * It cannot live inside `FeatureOrbit`: that section is one tall scrub
+        * track whose contents are stuck to the viewport, so a heading in it
+        * either sticks along with the stage or takes a share of the travel and
+        * leaves the first feature already selected while the title is still
+        * being read. Out here it scrolls away and the stage pins behind it,
+        * which is the rhythm Opal gets from stacking full-screen sections.
+        *
+        * It was `sr-only` before, which meant the largest section on the page
+        * was the only one a sighted visitor arrived at with no idea what they
+        * were looking at. The orbit still names itself by it, across the gap.
+        *
+        * `max-w-6xl`, not the `max-w-3xl` every other lead-in here uses, with
+        * the measure put back by the div inside. The orbit's panel is laid out
+        * in a 6xl grid, so a 3xl heading centred above it began a quarter of
+        * the way in while the sentence it introduced began at the gutter — two
+        * left edges a hundred and ninety pixels apart, one above the other.
+        */}
+      <section className="mx-auto max-w-6xl px-5 pt-24 sm:px-8 sm:pt-32">
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="eyebrow text-muted">What it does</p>
+            <h2 id="features-heading" className="section-title mt-4 text-balance">
+              In the order it matters
+            </h2>
+            <p className="lede mt-5 text-pretty text-muted">
+              Five of these are the practice: the routine you set, the three sittings you keep inside it, and the one
+              fruit you take up. The last three are what holds it together — the day assembled for you, the reminder at
+              the hour you picked, and the screen you change any of it from.
+            </p>
+          </div>
+        </Reveal>
+      </section>
+
       <FeatureOrbit features={features} />
 
       {/* -------------------------------------------------------------- Fruit */}
