@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { DeviceShot, DeviceVideo } from '@/components/device';
+import { DeviceShot } from '@/components/device';
+import DeviceVideo from '@/components/device-video';
 import InstallButton from '@/components/install-button';
 import FruitTicker from '@/components/fruit-ticker';
 import FeatureOrbit, { type OrbitFeature } from '@/components/feature-orbit';
