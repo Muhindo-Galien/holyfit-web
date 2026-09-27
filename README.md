@@ -1,15 +1,16 @@
 # holyfit-site
 
 The marketing page for HolyFit, plus the two legal documents the App Store
-listing has to point at. **This is not a web version of the app** — nothing here
-signs in, reads scripture or touches the API. It is four static pages.
+listing has to point at. **This is not a web version of the app** — no reader
+signs in here and no scripture is served. Four static pages, a waitlist form,
+and one hidden console for whoever edits the catalogue.
 
-Next.js 16 (App Router) · React 19 · Tailwind v4 · no runtime dependencies
-beyond those.
+Next.js 16 (App Router) · React 19 · Tailwind v4 · Clerk on two routes and
+nowhere else.
 
 ```bash
 npm run dev     # http://localhost:3000
-npm run build   # all four routes prerender to static HTML
+npm run build   # the four public routes prerender; /waitlist and /admin do not
 npm run lint
 ```
 
@@ -21,6 +22,40 @@ npm run lint
 | `/privacy` | `src/app/privacy/page.tsx` | **Required** as the App Store Privacy Policy URL |
 | `/terms`   | `src/app/terms/page.tsx`   | The EULA, including Apple's required clauses     |
 | `/support` | `src/app/support/page.tsx` | **Required** as the App Store Support URL        |
+| `/waitlist` | `src/app/waitlist/page.tsx` | Clerk's waitlist form. `noindex`, and not in the sitemap |
+| `/admin`   | `src/app/admin/`           | The catalogue console. Hidden — see below        |
+
+## The catalogue console, on `/admin`
+
+Where plan templates and prayer sets are written — the lists a reader can start
+without typing one out themselves. It talks to `holyfit-backend`; set
+`HOLYFIT_API_URL` (`.env.example` says where) and point it at **staging** unless you
+mean production.
+
+**Hidden is four decisions, and only three are the obvious ones.** Nothing links
+to it, it is `noindex, nofollow`, and it is absent from the sitemap. It is
+deliberately **not** in `robots.txt`: that file is public, so `Disallow: /admin`
+would publish the address to everyone curious enough to read it, and a hostile
+crawler ignores it anyway.
+
+**Hidden is also not the protection.** Three things refuse, in order, and only
+the last one matters:
+
+1. `src/app/admin/layout.tsx` draws a sign-in or a refusal rather than a form.
+2. Every Server Action in `src/app/admin/actions.ts` re-checks, because an
+   action is a `POST` endpoint whether or not a form was drawn.
+3. **The row-level security on `plan_templates` and `prayer_templates`**, which
+   reads `app_role` off the same Clerk token. This is the gate. The two checks
+   above exist so a person is told *why* in words.
+
+An administrator is an account with `role: admin` in Clerk **public** metadata —
+never unsafe metadata, which an account can write for itself. This site cannot
+grant it. A token minted before the change does not carry it, so sign out and
+back in.
+
+Both editors take their list as one textarea, one entry per line, because the
+work is bulk — twenty-one chapters pasted at once, not twenty-one clicks. The
+format is documented under each field.
 
 **Everything factual lives in `src/config/site.ts`** — the domain, the operator,
 both email addresses, the governing law, the document dates, the install link
@@ -56,6 +91,12 @@ being true if those change:
 Adding an analytics SDK, a push token, or a sharing feature means editing
 `src/app/privacy/page.tsx` in the same change.
 
+The "no third-party script" claim is about the pages a visitor can reach, and it
+is why `ClerkProvider` is mounted per route rather than at the root. `/waitlist`
+and `/admin` load Clerk; every public page loads nothing at all. The middleware
+matcher in `src/middleware.ts` is scoped to the same two routes, and the three
+have to be edited together.
+
 ## Before submitting to Apple
 
 Done:
@@ -82,6 +123,18 @@ Still needs you, because each one needs a credential this repo does not have:
 
 ## Deploying
 
-Static output, so anything works. `vercel --prod` from this directory, or point
-Vercel/Netlify at the repo. Set the custom domain to `useholyfit.com`; nothing
-else needs configuring, as there are no environment variables and no server.
+`vercel --prod` from this directory, or point Vercel/Netlify at the repo. Set
+the custom domain to `useholyfit.com`.
+
+The public pages are still static output and still need nothing configured. Two
+routes are not, and they need three variables — `.env.example` has the long
+version of why each one is the way it is:
+
+| Variable | Used by | Notes |
+| --- | --- | --- |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | `/waitlist`, `/admin` | Live keys work **only** on the registered domain; use test keys locally |
+| `CLERK_SECRET_KEY` | `/waitlist`, `/admin` | Same instance as the key above, never the other one |
+| `HOLYFIT_API_URL` | `/admin` | The backend. Unset is not a build failure — the console says so on the page |
+
+Without them the marketing pages deploy and serve exactly as before; it is the
+waitlist and the console that stop working.
