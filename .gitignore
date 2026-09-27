@@ -32,6 +32,11 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# …except the example, which holds no key and is the only written record of
+# which Clerk instance goes where and what /admin needs to reach the API.
+# The broad rule above swallowed it, which is why that setup lived on one
+# laptop until 2026-09-26.
+!.env.example
 
 # vercel
 .vercel
